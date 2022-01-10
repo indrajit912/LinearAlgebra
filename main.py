@@ -1,7 +1,5 @@
 from linear_algebra import *
 
-# Testing
-
 
 def matrix_details(mat:Matrix):
 
