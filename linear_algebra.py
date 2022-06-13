@@ -18,7 +18,10 @@ import numpy as np
 
 class Matrix:
 
-    """Class representing a matrix"""
+    """
+    Class representing a matrix
+    Author: Indrajit Ghosh
+    """
 
     def __init__(self, default, order=None):
         """
