@@ -296,11 +296,8 @@ class Matrix:
 
     def is_unitary(self):
         """Checks for unitary matrices"""
-        if self.is_selfadjoint():
-            if np.allclose(np.abs(self.eigen_values()), np.ones(self.rows)):
-                return True
-            else:
-                return False
+        if np.allclose(np.abs(self.eigen_values()), np.ones(self.rows)):
+            return True
         else:
             return False
 
