@@ -287,9 +287,7 @@ class Matrix:
     def is_isometry(self):
         """Checks for isometries"""
         I = np.eye(self.rows)
-        st = self.star()
-        A_st_A = self.__rmul__(st) # A*A
-        if np.array_equal(A_st_A.matrix, I):
+        if np.allclose(self.star().__mul__(self).matrix, I):
             return True
         else:
             return False
