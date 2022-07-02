@@ -386,6 +386,10 @@ class HaarDistributedUnitary(Matrix):
     `size`: integer
             dimension of the matrix
 
+    Returns
+    -------
+    An object of the class `Matrix`
+
     Reference
     ----------
     ... F. Mezzadri, "How to generate random matrices from the classical compact groups", 
@@ -400,7 +404,7 @@ class HaarDistributedUnitary(Matrix):
     """
     def __init__(self, size:int=2):
 
-        random_arr = self.generate_haar_unitary(size=size)
+        random_arr = self.unitary_group_generator(size=size)
 
         super().__init__(default=random_arr)
 
