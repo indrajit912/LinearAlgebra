@@ -4,3 +4,4 @@ numpy
 sympy
 matplotlib
 numpy
+manim==0.15.2
