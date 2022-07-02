@@ -4,3 +4,4 @@ pyperclip
 numpy
 sympy
 matplotlib
+numpy
