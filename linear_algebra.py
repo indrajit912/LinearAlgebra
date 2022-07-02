@@ -388,8 +388,8 @@ class HaarDistributedUnitary(Matrix):
 
     Reference
     ----------
-    ...    F. Mezzadri, "How to generate random matrices from the classical compact groups", 
-                :arXiv:"https://arxiv.org/pdf/math-ph/0609050.pdf".
+    ... F. Mezzadri, "How to generate random matrices from the classical compact groups", 
+            :arXiv:"https://arxiv.org/pdf/math-ph/0609050.pdf".
 
     Example
     -------
