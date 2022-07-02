@@ -376,6 +376,53 @@ class ScalarMatrix(Matrix):
         super().__init__(default=arr)
 
 
+
+class HaarDistributedUnitary(Matrix):
+    """
+    A class that gives a Haar distributed unitary := random Haar distributed unitary matrix
+
+    Reference:
+            F. Mezzadri, "How to generate random matrices from the classical compact groups", 
+                :arXiv:"https://arxiv.org/pdf/math-ph/0609050.pdf".
+
+    """
+    def __init__(self, size:int=2):
+
+        random_arr = self.generate_haar_unitary(size=size)
+
+        super().__init__(default=random_arr)
+
+
+    @staticmethod
+    def generate_haar_unitary(size:int=2):
+        """
+        Generate a random `Haar distributed` unitary matrix of given size.
+
+        parameter: `size` = int, the dimension of the matrix
+        
+        """
+
+        N = size # initializing the order of our matrices
+
+        # Step 1: generate `normally (0, 1) distributed` NxN real matrices
+        A, B = np.random.normal(size=(N, N), loc=0, scale=1), np.random.normal(size=(N, N), loc=0, scale=1)
+
+        # Step 2: creating a `normally distributed` complex NxN matrix
+        Z = A + 1j * B
+
+        # Step 3: calculating QR decomposition of Z
+        Q, R = np.linalg.qr(Z)
+
+        # Step 4: computing the diagonal matrix Lambda := diag(R_ii / abs(R_ii))
+        diagonal_of_lam = np.diag(R) / np.abs(np.diag(R)) # extracting the diagonal
+        lam = np.diag(diagonal_of_lam) # computing lamda
+
+        # Step 5: computing Q'
+        Q1 = np.dot(Q, lam)
+
+        return Q1
+
+
 class RandomDensityMatrix(Matrix):
     """
     Generates a random (real) density matrix
