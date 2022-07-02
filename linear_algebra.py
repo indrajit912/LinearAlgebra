@@ -278,7 +278,7 @@ class Matrix:
     
     def is_selfadjoint(self):
         """Checks whether the matrix is hermitian or not"""
-        return np.array_equal(self.matrix, self.star().matrix, equal_nan=True)
+        return np.allclose(self.matrix, self.star().matrix)
 
     def is_normal(self):
         """Checks for normality"""
@@ -303,10 +303,9 @@ class Matrix:
     def is_positive(self):
         """
         In Matrix analysis it is sometimes called 'positive semi definite':
-        A Matrix is positive iff it is self-adjoint with non-negative eigenvalues
+        A Matrix is positive iff it is normal with non-negative eigenvalues
         """
-        # return np.all(self.eigen_values() >= 0) and self.is_selfadjoint()
-        if self.is_selfadjoint():
+        if self.is_normal():
             if np.all(self.eigen_values() >= 0):
                 return True
             elif np.allclose(self.eigen_values()[self.eigen_values() < 0], 0):
@@ -319,7 +318,7 @@ class Matrix:
 
     def is_positive_definite(self):
         """
-        All eigenvalues are > 0 and self-adjoint
+        All eigenvalues are > 0 and normal
         """
         return np.all(self.eigen_values() > 0) and self.is_selfadjoint()
 
