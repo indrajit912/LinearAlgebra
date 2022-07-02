@@ -379,11 +379,23 @@ class ScalarMatrix(Matrix):
 
 class HaarDistributedUnitary(Matrix):
     """
-    A class that gives a Haar distributed unitary := random Haar distributed unitary matrix
+    A class that gives a matrix-valued U(n) random variable.
 
-    Reference:
-            F. Mezzadri, "How to generate random matrices from the classical compact groups", 
+    Parameter
+    ---------
+    `size`: integer
+            dimension of the matrix
+
+    Reference
+    ----------
+    ...    F. Mezzadri, "How to generate random matrices from the classical compact groups", 
                 :arXiv:"https://arxiv.org/pdf/math-ph/0609050.pdf".
+
+    Example
+    -------
+    >>> from linear_algebra import HaarDistributedUnitary
+    >>> H = HaarDistributedUnitary(size=2)
+    >>> H
 
     """
     def __init__(self, size:int=2):
@@ -394,12 +406,17 @@ class HaarDistributedUnitary(Matrix):
 
 
     @staticmethod
-    def generate_haar_unitary(size:int=2):
+    def unitary_group_generator(size:int=2):
         """
-        Generate a random `Haar distributed` unitary matrix of given size.
+        A matrix-valued U(n) random variable.
 
-        parameter: `size` = int, the dimension of the matrix
-        
+        The `size` parameter specifies the order `n`.
+
+        Parameter
+        ---------
+        `size`: integer
+                dimension of the matrix
+
         """
 
         N = size # initializing the order of our matrices
