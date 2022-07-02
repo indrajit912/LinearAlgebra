@@ -282,7 +282,7 @@ class Matrix:
 
     def is_normal(self):
         """Checks for normality"""
-        return np.array_equal(self.__mul__(self.star()).matrix, self.star().__mul__(self).matrix, equal_nan=True)
+        return np.allclose(self.__mul__(self.star()).matrix, self.star().__mul__(self).matrix)
 
     def is_isometry(self):
         """Checks for isometries"""
