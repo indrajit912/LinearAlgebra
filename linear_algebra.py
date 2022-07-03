@@ -21,6 +21,31 @@ class Matrix:
     """
     Class representing a matrix
     Author: Indrajit Ghosh
+
+    Parameters
+    ----------
+        `default`: 2D list (or numpy 2D array)
+
+    Returns
+    -------
+        An ```Matrix``` class object
+
+
+    Examples
+    -------
+        >>> A = Matrix(
+                        [
+                            [1.2, 0.3],
+                            [0.1, 0]
+                        ]
+                    )
+
+        >>> A
+        >>>
+        >>> arr = np.arange(0, 9, 1).reshape(3, 3)
+        >>> mat = Matrix(default=arr)
+        >>> mat.prettify()
+        
     """
 
     def __init__(self, default, order=None):
@@ -197,6 +222,8 @@ class Matrix:
         
         # Matrix Multiplication
         if isinstance(other, Matrix):
+
+            # TODO: check whether the row or col is 1, in that case return a Vector
 
             return Matrix(np.matmul(self.matrix, other.matrix))
 
