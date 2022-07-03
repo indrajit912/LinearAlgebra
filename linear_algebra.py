@@ -769,6 +769,7 @@ class BasisVector(Vector):
 
 
 class RandomVector(Vector):
+    # TODO: Make it complex random vector
     def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None):
 
         a = lower
@@ -783,6 +784,7 @@ class RandomVector(Vector):
         else:
             arr = (desired_norm * arr) / nr
             super().__init__(default=arr)
+
 
 class QuantumState(RandomVector):
 
