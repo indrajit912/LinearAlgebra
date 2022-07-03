@@ -1,4 +1,6 @@
 from linear_algebra import *
+from datetime import datetime
+import subprocess, os
 
 
 def matrix_details(mat:Matrix):
@@ -40,16 +42,43 @@ def matrix_details(mat:Matrix):
     print(info)
 
 
+def create_tex_file(mat:Matrix, **kwargs):
+    """
+    Generates a `tex` file with the content `mat.get_tex()`
+    """
+    tex_str = r"""
+
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+    """
+
+    tex_str += mat.get_tex(**kwargs)
+
+    tex_str += "\n\n" + r"""\end{document}""" + "\n\n"
+
+    timestamp = str(datetime.now().timestamp()).replace('.', '')
+    texfilename = timestamp + '.tex'
+    pdffilename = timestamp + '.pdf'
+    texFile = "./media/Tex/" + texfilename
 
 
+    with open(texFile, "w") as f:
+        f.write(tex_str)
+    
+    os.chdir("./media/Tex/")
+    subprocess.run(["pdflatex", texfilename])
+    subprocess.run(["xdg-open", pdffilename])
 
 
 def main():
 
-    A = RandomMatrix(order=10)
+    A = RandomMatrix(order=3)
 
-
-    print(A.get_tex())
+    # matrix_details(A)
+    create_tex_file(A)
 
 
 

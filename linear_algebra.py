@@ -92,11 +92,11 @@ class Matrix:
             for j in range(len(matrix[0])):
                 matrix_str[i][j] += Matrix.format_complex_to_str(matrix[i][j], **kwargs)
 
-        tex_command = '\\begin{pmatrix}\n'
+        tex_command = r"""\[""" + "\n" + '\\begin{pmatrix}\n'
         for row in matrix_str:
             tex_command +=  '    ' + self.add_ampersand_and_linebreak_tex(row)
 
-        tex_command += '\\end{pmatrix}\n'
+        tex_command += '\\end{pmatrix}\n' + r"""\]"""
 
         return tex_command
 
