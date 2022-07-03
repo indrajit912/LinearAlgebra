@@ -223,6 +223,15 @@ class Matrix:
     def __pow__(self, n:int):
         return Matrix(np.linalg.matrix_power(self.matrix, n))
 
+    
+    def get_upper_left_block(self, size:int=2):
+        """
+        Returns the upper-left `size` by `size` block submatrix 
+        """
+        block_arr = self.matrix[0:size, 0:size]
+
+        return Matrix(block_arr)
+        
 
     def transpose(self):
         """Transpose"""
