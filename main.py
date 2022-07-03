@@ -75,7 +75,7 @@ def create_tex_file(mat:Matrix, **kwargs):
 
 def main():
 
-    A = RandomMatrix(order=3)
+    A = RandomMatrix(order=6)
 
     # matrix_details(A)
     create_tex_file(A)
