@@ -52,6 +52,7 @@ def create_tex_file(mat:Matrix, **kwargs):
 \usepackage{amsmath}
 
 \begin{document}
+\thispagestyle{empty}
 
     """
 
@@ -75,7 +76,7 @@ def create_tex_file(mat:Matrix, **kwargs):
 
 def main():
 
-    A = RandomMatrix(order=6)
+    A = RandomMatrix(order=10)
 
     # matrix_details(A)
     create_tex_file(A)
