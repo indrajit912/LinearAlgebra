@@ -71,12 +71,17 @@ def create_tex_file(mat:Matrix, **kwargs):
     
     os.chdir("./media/Tex/")
     subprocess.run(["pdflatex", texfilename])
+    os.system('clear')
+
+    print(f"""
+        The tex file lives here:\n\t {texFile}
+        """)
     subprocess.run(["xdg-open", pdffilename])
 
 
 def main():
 
-    A = RandomMatrix(order=5)
+    A = HaarDistributedUnitary(size=5)
 
     # matrix_details(A)
     create_tex_file(A)
