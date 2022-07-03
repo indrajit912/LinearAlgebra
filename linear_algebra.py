@@ -569,6 +569,70 @@ class HaarDistributedUnitary(Matrix):
         return Q1
 
 
+class RandomOrthogonalMatrix(Matrix):
+    """
+    A class that gives a matrix-valued O(n) random variable.
+
+    Parameter
+    ---------
+    `size`: integer
+            dimension of the matrix
+
+    Returns
+    -------
+    An object of the class `Matrix`
+
+    Reference
+    ----------
+    ... F. Mezzadri, "How to generate random matrices from the classical compact groups", 
+            :arXiv:"https://arxiv.org/pdf/math-ph/0609050.pdf".
+
+    Example
+    -------
+    >>> from linear_algebra import HaarDistributedUnitary
+    >>> O = RandomOrthogonalMatrix(size=2)
+    >>> O
+
+    """
+    def __init__(self, size:int=2):
+
+        random_arr = self.orthogonal_group_generator(size=size)
+
+        super().__init__(default=random_arr)
+
+
+    @staticmethod
+    def orthogonal_group_generator(size:int=2):
+        """
+        A matrix-valued O(n) random variable.
+
+        The `size` parameter specifies the order `n`.
+
+        Parameter
+        ---------
+        `size`: integer
+                dimension of the matrix
+
+        """
+
+        N = size # initializing the order of our matrices
+
+        # Step 1: generate `normally (0, 1) distributed` NxN real matrix
+        Z = np.random.normal(size=(N, N), loc=0, scale=1)
+
+        # Step 3: calculating QR decomposition of Z
+        Q, R = np.linalg.qr(Z)
+
+        # Step 4: computing the diagonal matrix Lambda := diag(R_ii / abs(R_ii))
+        diagonal_of_lam = np.diag(R) / np.abs(np.diag(R)) # extracting the diagonal
+        lam = np.diag(diagonal_of_lam) # computing lamda
+
+        # Step 5: computing Q'
+        Q1 = np.dot(Q, lam)
+
+        return Q1
+        
+
 class RandomDensityMatrix(Matrix):
     """
     TODO: Need modification 
