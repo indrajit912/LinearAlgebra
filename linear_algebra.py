@@ -19,7 +19,7 @@ import numpy as np
 class Matrix:
 
     """
-    Class representing a matrix
+    Class representing a complex matrix
     Author: Indrajit Ghosh
 
     Parameters
@@ -45,7 +45,7 @@ class Matrix:
         >>> arr = np.arange(0, 9, 1).reshape(3, 3)
         >>> mat = Matrix(default=arr)
         >>> mat.prettify()
-        
+
     """
 
     def __init__(self, default, order=None):
