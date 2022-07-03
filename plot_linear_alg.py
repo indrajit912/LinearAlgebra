@@ -28,10 +28,14 @@ class SpectralDistribution(Scene):
         unit_circle = Circle(radius=1, color=GREY)
 
         # Generating random unitary matrix
-        H = RandomMatrix(order=20)
+        R = RandomMatrix(order=20)
+        H = HaarDistributedUnitary(size=10)
+        P = RandomDensityMatrix(size=10)
+
+        mat = P # Change here
 
         # Plotting the eigenvalues of the matrix
-        complex_nums = [np.array([eig.real, eig.imag, 0]) for eig in H.eigen_values()]
+        complex_nums = [np.array([eig.real, eig.imag, 0]) for eig in mat.eigen_values()]
         dots = VGroup(*[Dot(num, color=RED, radius=0.05) for num in complex_nums])
 
         self.add(number_plane, unit_circle, dots)

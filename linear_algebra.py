@@ -544,6 +544,7 @@ class HaarDistributedUnitary(Matrix):
 
 class RandomDensityMatrix(Matrix):
     """
+    TODO: Need modification 
     Generates a random (real) density matrix
 
     Positive elements of the C* algebra M_n(C) with trace 1
