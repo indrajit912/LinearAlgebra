@@ -757,6 +757,13 @@ class RandomVector(Vector):
             arr = (desired_norm * arr) / nr
             super().__init__(default=arr)
 
+class QuantumState(RandomVector):
+
+    """Random vector of norm one"""
+
+    def __init__(self, dim: int = 3):
+        super().__init__(dim, desired_norm=1)
+
 
 
 class SystemOfLinearEquations:
