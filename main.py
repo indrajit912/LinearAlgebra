@@ -41,13 +41,16 @@ def matrix_details(mat:Matrix):
 
 
 
+
+
+
 def main():
 
-    A = Matrix([[1, 0],
-                [0, 1]])
+    A = RandomMatrix(order=10)
 
 
-    matrix_details(A)
+    print(A.get_tex())
+
 
 
 if __name__ == '__main__':

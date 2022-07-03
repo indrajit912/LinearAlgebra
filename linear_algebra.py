@@ -55,6 +55,102 @@ class Matrix:
 
         return mat
 
+
+    def get_tex(self, **kwargs):
+        """
+        Converts the ```Matrix``` object into a LaTeX expression
+
+        Parameter
+        ---------
+            `round_off`: int
+        
+        Returns
+        -------
+            LaTeX expression for the Matrix
+
+        Example
+        -------
+
+        >>> from linear_algebra import *
+        >>> A = Matrix([
+                        [5.73+3*1j, 34.2+1j],
+                        [0.8, 3.3]
+                        ])
+        >>> A.get_tex(round_off=2)
+
+        >>>    \begin{pmatrix}
+                   5.73+3.0i   & 34.2+i  \\
+                   0.8   & 3.3  \\
+               \end{pmatrix}
+
+        """
+
+        matrix = self.matrix
+
+        matrix_str = [['' for _ in matrix[0]] for _ in matrix]
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                matrix_str[i][j] += Matrix.format_complex_to_str(matrix[i][j], **kwargs)
+
+        tex_command = '\\begin{pmatrix}\n'
+        for row in matrix_str:
+            tex_command +=  '    ' + self.add_ampersand_and_linebreak_tex(row)
+
+        tex_command += '\\end{pmatrix}\n'
+
+        return tex_command
+
+
+    @staticmethod
+    def add_ampersand_and_linebreak_tex(arr):
+        """Accepts a 1D list and add '&' and '\\' chars properly"""
+        _tex = ''.join(x + '   & ' for x in arr)[:-3] + '\\\\' + '\n'
+        return _tex
+
+    
+    @staticmethod
+    def format_complex_to_str(z:complex=1 - 1j, round_off:int=2):
+        """
+        A function that formats a ```complex()``` into a ```str``` of the form `a+bi`
+
+        Parameters
+        -----------
+            `z`: complex
+            `round_off`: int
+
+        Returns
+        -------
+            `str` of the form `z.real+z.imag i`
+
+        """
+
+        if z.imag == 0:
+            # Real numbers
+            return str(int(z.real)) if z.real.is_integer() else str(np.round(z.real, round_off))
+
+        else:
+            if z.real == 0:
+                # Purely imaginary
+                if z.imag == 1:
+                    return "i"
+                elif z.imag == -1:
+                    return "-i"
+                else:
+                    return str(int(z.imag)) + "i" if z.imag.is_integer() else str(np.round(z.imag, round_off)) + "i"
+
+            else:
+                # Complex numbers
+                if z.imag > 0:
+                    if z.imag == 1:
+                        return str(np.round(z.real, round_off)) + "+" + "i"
+                    else:
+                        return str(np.round(z.real, round_off)) + "+" + str(np.round(z.imag, round_off)) + "i"
+                else:
+                    if z.imag == -1:
+                        str(np.round(z.real, round_off)) + "-" + "i"
+                    else:
+                        return str(np.round(z.real, round_off)) + "-" + str(np.round(np.abs(z.imag), round_off)) + "i"
+
     
     def __eq__(self, other):
         """Equality between matrices"""
