@@ -303,6 +303,10 @@ class Matrix:
         return np.linalg.det(self.matrix)
 
     def trace(self, offset:int=0):
+        """
+        The sum along its diagonal with the given offset
+        is returned, i.e., the sum of elements ``self.matrix[i,i+offset]`` for all i.
+        """
         return np.trace(self.matrix, offset=offset)
 
     def rank(self):
