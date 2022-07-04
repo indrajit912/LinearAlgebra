@@ -467,6 +467,80 @@ class Matrix:
         return self.__mul__(self.star()).is_projection()
 
 
+class BlockDiagonalMatrix(Matrix):
+    """
+    Class representing a block-diagonal matrix
+
+    Parameters
+    ----------
+        `blocks`: list
+            ```list``` of blocks; each of these block could be `np.ndarray` or `Matrix`
+
+    Returns
+    -------
+        `Matrix` class object
+    """
+    I2 = [
+        [1, 0],
+        [0, 1]
+    ]
+    I3 = [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]
+    ]
+
+
+    def __init__(self, blocks:list=[I2, I3]):
+        arr = self.block_matrix(blocks)
+        super().__init__(default=arr)
+
+
+    @staticmethod
+    def block_matrix(blocks:list):
+        """
+        Creates an block-diagonal array from a list of `blocks`
+
+        Returns
+        -------
+            `2D-list`
+        """
+        rows = []
+        cols = []
+
+        matrices = []
+
+        for block in blocks:
+            if isinstance(block, (int, float, complex)):
+                rows.append(1)
+                cols.append(1)
+                matrices.append([[block]])
+            
+            elif isinstance(block, (np.ndarray, list)):
+                rows.append(len(block))
+                cols.append(len(block[0]))
+                matrices.append(block)
+
+            elif isinstance(block, Matrix):
+                rows.append(len(block.matrix))
+                cols.append(len(block.matrix[0]))
+                matrices.append(block.matrix)
+
+        mat = [[0 for _ in range(sum(cols))] for _ in range(sum(rows))]
+
+
+        dr, dc = 0, 0
+        for block in matrices:
+            for i in range(sum(rows)):
+                for j in range(sum(cols)):
+                    if (dr <= i < dr + len(block)) and (dc <= j < dc + len(block[0])):
+                        mat[i][j] += block[i - dr][j - dc]
+
+            dr += len(block)
+            dc += len(block[0])
+        
+        return mat
+
 
 class Identity(Matrix):
     """Identity Matrix of order n"""
