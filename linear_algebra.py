@@ -1030,6 +1030,21 @@ class BasisVector(Vector):
 
 
 class RandomVector(Vector):
+    """
+    Generates a random `Vector` whose entries are `Uniform[a, b)` distributed
+
+    Parameters
+    ----------
+        `dim`: int
+        `lower`: float; 
+            this is the value of `a`. default will be `-1`
+        `upper`: float; 
+            this is the value of `b`. default will be `1`
+        `_complex`:bool
+            default ```True```
+            if `_complex` is `True` then the class will generate a random 
+            vector with complex entries otherwise real entries.
+    """
 
     def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None, _complex:bool=True):
 
