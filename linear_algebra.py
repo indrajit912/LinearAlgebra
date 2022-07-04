@@ -1258,13 +1258,43 @@ class SymbolicJordanBlock(SymbolicMatrix):
 
 
 class SymbolicVandermondeMatrix(SymbolicMatrix):
-    """Vandermonde Matrix"""
+    """
+    A class representing Symbolic Vandermonde Matrix, a `symbolic` matrix with the terms 
+    of a geometric progression in each row: an m x n matrix
 
-    def __init__(self, symbol=lam, size:int=5):
+    Parameters
+    ----------
+        `symbols`:list
+            default= [1, omega, beta]
+        `cols`:int
+            default=4
+    
+    Returns
+    -------
+        `SymbolicMatrix`
 
-        mat = [[0] * size for _ in range(size)]
-        for i in range(size):
-            for j in range(size):
-                mat[i][j] = symbol ** (j)
+    """
+
+    def __init__(self, symbols=[1, omega, beta], cols:int=4):
+
+        mat = self.symbolic_vandermonde(scalars=symbols, cols=cols)
 
         super().__init__(default=mat)
+
+    
+    @staticmethod
+    def symbolic_vandermonde(scalars:list=[1, omega, alpha], cols:int=4):
+        """
+        Creates an vandermonde array
+
+        Parameters
+        ----------
+            `scalars`:list
+            `cols`:int
+
+        Returns
+        -------
+            `np.ndarray`
+        """
+        arr = np.array([[x ** i for i in range(cols)] for x in scalars])
+        return arr
