@@ -753,15 +753,18 @@ class RandomDensityMatrix(Matrix):
     Positive elements of the C* algebra M_n(C) with trace 1
     euivalently an positive definite matrix of trace 1
 
-    Parameter
-    ---------
+    Parameters
+    ----------
         `size`:int  
             order of the matrix
         `lower`:float
+            default `-1`
         `upper`:float
-        `choice`:str
-            choice could be one of 'Real` or `Complex`. based on this the class 
-            provides either a real matrix or complex one.
+            default `1`
+        `_complex`:bool
+            default ```True```
+            if `_complex` is `True` then the class will generate a density 
+            matrix with complex entries otherwise real entries.
 
     Returns
     -------
@@ -774,12 +777,12 @@ class RandomDensityMatrix(Matrix):
     >>> rho.prettify()
 
     """
-    def __init__(self, size:int=2, lower=-1, upper=1, choice:str=None):
+    def __init__(self, size:int=2, lower=-1, upper=1, _complex:bool=True):
 
         a = lower
         b = upper
 
-        choice = np.random.choice(['Real', 'Complex']) if choice is None else choice.title()
+        choice = np.random.choice(['Real', 'Complex']) if _complex else 'Real'
         if choice == 'Real':
             density_mat = self.generate_real_density_matrix(size=size, lower=a, upper=b)
         else:
