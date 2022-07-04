@@ -489,7 +489,6 @@ class BlockDiagonalMatrix(Matrix):
         [0, 0, 1]
     ]
 
-
     def __init__(self, blocks:list=[I2, I3]):
         arr = self.block_matrix(blocks)
         super().__init__(default=arr)
