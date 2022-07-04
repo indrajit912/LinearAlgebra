@@ -759,6 +759,9 @@ class RandomDensityMatrix(Matrix):
             order of the matrix
         `lower`:float
         `upper`:float
+        `choice`:str
+            choice could be one of 'Real` or `Complex`. based on this the class 
+            provides either a real matrix or complex one.
 
     Returns
     -------
@@ -771,13 +774,13 @@ class RandomDensityMatrix(Matrix):
     >>> rho.prettify()
 
     """
-    def __init__(self, size:int=2, lower=-1, upper=1):
+    def __init__(self, size:int=2, lower=-1, upper=1, choice:str=None):
 
         a = lower
         b = upper
 
-        choice = np.random.choice(['Head', 'Tail'])
-        if choice == 'Head':
+        choice = np.random.choice(['Real', 'Complex']) if choice is None else choice.title()
+        if choice == 'Real':
             density_mat = self.generate_real_density_matrix(size=size, lower=a, upper=b)
         else:
             density_mat = self.generate_complex_density_matrix(size=size, lower=a, upper=b)
