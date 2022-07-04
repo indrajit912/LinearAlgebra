@@ -560,7 +560,7 @@ class RandomMatrix(Matrix):
         `upper`: float; 
             this is the value of `b`. By default will be `1`
     """
-    def __init__(self, order, lower=-1, upper=1):
+    def __init__(self, order=2, lower=-1, upper=1):
 
         if isinstance(order, tuple):
             rows = order[0]
