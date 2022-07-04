@@ -788,9 +788,61 @@ class RandomDensityMatrix(Matrix):
         a = lower
         b = upper
         ran_arr = (b - a) * np.random.random_sample(size=(size, size)) + a # Uniform[a, b); b>a
-        ran_arr_trans = ran_arr.T
+        ran_arr_trans = ran_arr.T # taking transpose
         rho = np.dot(ran_arr_trans, ran_arr) # creating positive matrix
 
+        ran_density_mat = rho / np.trace(rho) # making trace 1
+
+        return ran_density_mat
+
+
+class RandomComplexDensityMatrix(Matrix):
+    """
+    Class representing a random (complex) density matrix
+
+    Positive elements of the C* algebra M_n(C) with trace 1
+    euivalently an positive definite matrix of trace 1
+
+    Parameter
+    ---------
+        `size`:int  
+            order of the matrix
+        `lower`:float
+        `upper`:float
+
+    Returns
+    -------
+        `Matrix` class object
+
+    Example
+    -------
+    >>> from linear_algebra import RandomDensityMatrix
+    >>> rho = RandomComplexDensityMatrix(size=3)
+    >>> rho.prettify()
+
+    """
+    def __init__(self, size:int=2, lower=-1, upper=1):
+
+        a = lower
+        b = upper
+        density_mat = self.generate_complex_density_matrix(size=size, lower=a, upper=b)
+
+        super().__init__(default=density_mat)
+    
+    @staticmethod
+    def generate_complex_density_matrix(size:int=2, lower=-1, upper=1):
+        """
+        Positive trace 1 matrices in M_n(C)
+        """
+        a = lower
+        b = upper
+        ran_arr1 = (b - a) * np.random.random_sample(size=(size, size)) + a # Uniform[a, b); b>a
+        ran_arr2 = (b - a) * np.random.random_sample(size=(size, size)) + a # Uniform[a, b); b>a
+        ran_arr = ran_arr1 + 1j * ran_arr2 # generating random complex matrix
+
+        ran_arr_conj_trans = ran_arr.conjugate().T # taking conjugate transpose
+
+        rho = np.dot(ran_arr_conj_trans, ran_arr) # creating positive matrix
         ran_density_mat = rho / np.trace(rho) # making trace 1
 
         return ran_density_mat
@@ -963,7 +1015,6 @@ class Vector(Matrix):
         return super().__mul__(self.star()).__mul__(n)
 
 
-
 class BasisVector(Vector):
 
     def __init__(self, dim: int = 3, i:int=1):
@@ -993,12 +1044,10 @@ class RandomVector(Vector):
 
 
 class QuantumState(RandomVector):
-
     """Random vector of norm one"""
 
     def __init__(self, dim: int = 3):
         super().__init__(dim, desired_norm=1)
-
 
 
 class SystemOfLinearEquations:
