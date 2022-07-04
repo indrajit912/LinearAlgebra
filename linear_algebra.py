@@ -874,17 +874,43 @@ class JordanBlock(Matrix):
 
 
 class VandermondeMatrix(Matrix):
-    """Vandermonde Matrix"""
+    """
+    A class representing Vandermonde Matrix, a matrix with the terms 
+    of a geometric progression in each row: an m x n matrix
 
-    # TODO: Code the generalized case: x_1, ..., x_n
-    def __init__(self, scalar=2, size:int=5):
+    Parameters
+    ----------
+        `scalars`:list
+            default= [1, 2, 3, 4, 5]
+        `cols`:int
+            default=4
     
-        mat = np.zeros((size, size))
-        for i in range(size):
-            for j in range(size):
-                mat[i][j] = scalar ** (j)
+    Returns
+    -------
+        `Matrix`
 
+    """
+    def __init__(self, scalars:list=[1, 2, 3, 4, 5], cols:int=4):
+        mat = self.vandermonde(scalars=scalars, cols=cols)
         super().__init__(default=mat)
+
+    
+    @staticmethod
+    def vandermonde(scalars:list=[1, 2, 3, 4, 5], cols:int=4):
+        """
+        Creates an vandermonde array
+
+        Parameters
+        ----------
+            `scalars`:list
+            `cols`:int
+
+        Returns
+        -------
+            `np.ndarray`
+        """
+        arr = np.array([[x ** i for i in range(cols)] for x in scalars])
+        return arr
 
 
 class PauliMatrix(Matrix):
