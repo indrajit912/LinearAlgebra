@@ -263,12 +263,10 @@ class Matrix:
 
     def star(self):
         """Conjugate Transpose"""
-        M = Matrix(default=0, order=(self.cols, self.rows))
-        for i in range(M.rows):
-            for j in range(M.cols):
-                M.matrix[i][j] = complex(self.matrix[j][i]).conjugate()
+        arr = self.matrix
+        arr_conj_trans = arr.conjugate().T
         
-        return M
+        return Matrix(arr_conj_trans)
     
 
     def __getitem__(self, key):
