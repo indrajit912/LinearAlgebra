@@ -911,6 +911,17 @@ class VandermondeMatrix(Matrix):
         """
         arr = np.array([[x ** i for i in range(cols)] for x in scalars])
         return arr
+    
+    @staticmethod
+    def roots_of_unity(n:int=3):
+        """
+        Returns
+        -------
+            `list`: the list of nth roots of unity: z_k = exp((2 pi k i) / n); k = 0, 1, ..., n-1
+    
+        """
+        roots = [np.exp((2*np.pi*k*1j)/n) for k in range(n)]
+        return roots
 
 
 class PauliMatrix(Matrix):
