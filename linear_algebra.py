@@ -963,11 +963,8 @@ class Vector(Matrix):
         return super().__setitem__((key, 1), value)
 
     def __mul__(self, other):
-        if isinstance(other, Vector):
-            return super().__mul__(other)
-        elif isinstance(other, (int, float, complex)):
+        if isinstance(other, (int, float, complex)):
             return Vector(super().__mul__(other).vector_array())
-
 
     def __truediv__(self, other):
         if isinstance(other, (int, float, complex)):
