@@ -1052,11 +1052,11 @@ class RandomVector(Vector):
             super().__init__(default=arr)
 
 
-class QuantumState(RandomVector):
+class RandomQuantumState(RandomVector):
     """Random vector of norm one"""
 
-    def __init__(self, dim: int = 3):
-        super().__init__(dim, desired_norm=1)
+    def __init__(self, dim: int = 3, **kwargs):
+        super().__init__(dim, desired_norm=1, **kwargs)
 
 
 class SystemOfLinearEquations:
