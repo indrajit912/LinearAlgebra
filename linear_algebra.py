@@ -539,6 +539,25 @@ class BlockDiagonalMatrix(Matrix):
         
         return mat
 
+    @staticmethod
+    def amplify(mat:Matrix, num_of_times:int=2):
+        """
+        Amplify a `Matrix` by given number and returns it
+
+        Parameters
+        ----------
+            `mat`: Matrix
+            `num_of_times`: int
+
+        Returns
+        -------
+            `BlockDiagonalMatrix([mat,...,mat])`
+    
+        """
+        ls = [mat for _ in range(num_of_times)]
+
+        return BlockDiagonalMatrix(ls)
+
 
 class Identity(Matrix):
     """Identity Matrix of order n"""
