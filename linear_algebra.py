@@ -548,7 +548,7 @@ class Identity(Matrix):
 
 class RandomMatrix(Matrix):
     """
-    Generates a real random matrix whose entries are `Uniform[a, b)` distributed
+    Generates a random matrix whose entries are `Uniform[a, b)` distributed
 
     Parameters
     ----------
