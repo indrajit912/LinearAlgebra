@@ -918,7 +918,7 @@ class VandermondeMatrix(Matrix):
         Returns
         -------
             `list`: the list of nth roots of unity: z_k = exp((2 pi k i) / n); k = 0, 1, ..., n-1
-    
+
         """
         roots = [np.exp((2*np.pi*k*1j)/n) for k in range(n)]
         return roots
@@ -1031,11 +1031,16 @@ class BasisVector(Vector):
 
 class RandomVector(Vector):
 
-    def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None):
+    def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None, _complex:bool=True):
 
         a = lower
         b = upper
-        arr = (b - a) * np.random.random_sample(size=dim) + a # Uniform[a, b); b>a
+        if _complex:
+            arr1 = (b - a) * np.random.random_sample(size=dim) + a # Uniform[a, b); b>a
+            arr2 = (b - a) * np.random.random_sample(size=dim) + a # Uniform[a, b); b>a
+            arr = arr1 + 1j * arr2
+        else:
+            arr = (b - a) * np.random.random_sample(size=dim) + a # Uniform[a, b); b>a
         arr = np.round(arr, decimals=2) # rounding off
 
         nr = np.linalg.norm(arr)
