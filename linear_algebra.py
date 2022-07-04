@@ -556,11 +556,15 @@ class RandomMatrix(Matrix):
     ----------
         `order`: int
         `lower`: float; 
-            this is the value of `a`. By default will be `-1`
+            this is the value of `a`. default will be `-1`
         `upper`: float; 
-            this is the value of `b`. By default will be `1`
+            this is the value of `b`. default will be `1`
+        `_complex`:bool
+            default ```True```
+            if `_complex` is `True` then the class will generate a random 
+            matrix with complex entries otherwise real entries.
     """
-    def __init__(self, order=2, lower=-1, upper=1):
+    def __init__(self, order=2, lower=-1, upper=1, _complex:bool=True):
 
         if isinstance(order, tuple):
             rows = order[0]
@@ -568,40 +572,28 @@ class RandomMatrix(Matrix):
         if isinstance(order, int):
             rows = cols = order
 
-        a = lower
-        b = upper
-        arr = (b - a) * np.random.random_sample(size=(rows, cols)) + a # Uniform[a, b); b>a
+        a, b = lower, upper
+        choice = np.random.choice(['Real', 'Complex']) if _complex else 'Real'
+        if choice == 'Real':
+            arr = self.generate_real_random_array(size=(rows, cols), lower=a, upper=b)
+        else:
+            arr = self.generate_complex_random_array(size=(rows, cols), lower=a, upper=b)
 
         super().__init__(default=arr)
 
+    @staticmethod
+    def generate_real_random_array(size:tuple=(2, 2), lower:float=-1, upper:float=1):
+        a, b = lower, upper
+        ran_arr = (b - a) * np.random.random_sample(size=(size[0], size[1])) + a # Uniform[a, b); b>a
+        return ran_arr
 
-class RandomComplexMatrix(Matrix):
-    """
-    Generates a complex random matrix whose entries are `Uniform[a, b)` distributed
-
-    Parameters
-    ----------
-        `order`: int
-        `lower`: float; 
-            this is the value of `a`. By default will be `-1`
-        `upper`: float; 
-            this is the value of `b`. By default will be `1`
-    """
-    def __init__(self, order=2, lower=-1, upper=1):
-    
-        if isinstance(order, tuple):
-            rows = order[0]
-            cols = order[1]
-        if isinstance(order, int):
-            rows = cols = order
-
-        a = lower
-        b = upper
-        arr1 = (b - a) * np.random.random_sample(size=(rows, cols)) + a # Uniform[a, b); b>a
-        arr2 = (b - a) * np.random.random_sample(size=(rows, cols)) + a
-        arr = arr1 + 1j * arr2
-
-        super().__init__(default=arr)
+    @staticmethod
+    def generate_complex_random_array(size:tuple=(2, 2), lower:float=-1, upper:float=1):
+        a, b = lower, upper
+        ran_arr1 = (b - a) * np.random.random_sample(size=(size[0], size[1])) + a # Uniform[a, b); b>a
+        ran_arr2 = (b - a) * np.random.random_sample(size=(size[0], size[1])) + a # Uniform[a, b); b>a
+        ran_arr = ran_arr1 + 1j * ran_arr2
+        return ran_arr
 
 
 class ScalarMatrix(Matrix):
