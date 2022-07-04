@@ -748,24 +748,52 @@ class RandomOrthogonalMatrix(Matrix):
 
 class RandomDensityMatrix(Matrix):
     """
-    TODO: Need modification 
-    Generates a random (real) density matrix
+    Class representing a random (real) density matrix
 
     Positive elements of the C* algebra M_n(C) with trace 1
     euivalently an positive definite matrix of trace 1
+
+    Parameter
+    ---------
+        `size`:int  
+            order of the matrix
+        `lower`:float
+        `upper`:float
+
+    Returns
+    -------
+        `Matrix` class object
+
+    Example
+    -------
+    >>> from linear_algebra import RandomDensityMatrix
+    >>> rho = RandomDensityMatrix(size=3)
+    >>> rho.prettify()
+
     """
     def __init__(self, size:int=2, lower=-1, upper=1):
 
         a = lower
         b = upper
+        density_mat = self.generate_real_density_matrix(size=size, lower=a, upper=b)
+
+        super().__init__(default=density_mat)
+
+    
+    @staticmethod
+    def generate_real_density_matrix(size:int=2, lower=-1, upper=1):
+        """
+        Positive trace 1 matrices in M_n(C)
+        """
+        a = lower
+        b = upper
         ran_arr = (b - a) * np.random.random_sample(size=(size, size)) + a # Uniform[a, b); b>a
+        ran_arr_trans = ran_arr.T
+        rho = np.dot(ran_arr_trans, ran_arr) # creating positive matrix
 
-        rho = ran_arr.T * ran_arr
-        rho_trace = np.trace(rho)
+        ran_density_mat = rho / np.trace(rho) # making trace 1
 
-        rho = rho / rho_trace
-
-        super().__init__(default=rho)
+        return ran_density_mat
 
 
 class BasisMatrix(Matrix):
