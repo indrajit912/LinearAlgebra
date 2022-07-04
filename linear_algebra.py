@@ -550,7 +550,7 @@ class Identity(Matrix):
 
 class RandomMatrix(Matrix):
     """
-    Generates a random matrix whose entries are `Uniform[a, b)` distributed
+    Generates a real random matrix whose entries are `Uniform[a, b)` distributed
 
     Parameters
     ----------
@@ -571,6 +571,35 @@ class RandomMatrix(Matrix):
         a = lower
         b = upper
         arr = (b - a) * np.random.random_sample(size=(rows, cols)) + a # Uniform[a, b); b>a
+
+        super().__init__(default=arr)
+
+
+class RandomComplexMatrix(Matrix):
+    """
+    Generates a complex random matrix whose entries are `Uniform[a, b)` distributed
+
+    Parameters
+    ----------
+        `order`: int
+        `lower`: float; 
+            this is the value of `a`. By default will be `-1`
+        `upper`: float; 
+            this is the value of `b`. By default will be `1`
+    """
+    def __init__(self, order=2, lower=-1, upper=1):
+    
+        if isinstance(order, tuple):
+            rows = order[0]
+            cols = order[1]
+        if isinstance(order, int):
+            rows = cols = order
+
+        a = lower
+        b = upper
+        arr1 = (b - a) * np.random.random_sample(size=(rows, cols)) + a # Uniform[a, b); b>a
+        arr2 = (b - a) * np.random.random_sample(size=(rows, cols)) + a
+        arr = arr1 + 1j * arr2
 
         super().__init__(default=arr)
 
@@ -918,7 +947,7 @@ class BasisVector(Vector):
 
 
 class RandomVector(Vector):
-    # TODO: Make it complex random vector
+
     def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None):
 
         a = lower
