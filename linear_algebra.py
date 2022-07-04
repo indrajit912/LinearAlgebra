@@ -222,9 +222,6 @@ class Matrix:
         
         # Matrix Multiplication
         if isinstance(other, Matrix):
-
-            # TODO: check whether the row or col is 1, in that case return a Vector
-
             return Matrix(np.matmul(self.matrix, other.matrix))
 
         # Scalar Multiplication
