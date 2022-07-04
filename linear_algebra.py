@@ -475,6 +475,17 @@ class Identity(Matrix):
 
 
 class RandomMatrix(Matrix):
+    """
+    Generates a random matrix whose entries are `Uniform[a, b)` distributed
+
+    Parameters
+    ----------
+        `order`: int
+        `lower`: float; 
+            this is the value of `a`. By default will be `-1`
+        `upper`: float; 
+            this is the value of `b`. By default will be `1`
+    """
     def __init__(self, order, lower=-1, upper=1):
 
         if isinstance(order, tuple):
@@ -499,7 +510,6 @@ class ScalarMatrix(Matrix):
                 arr[i][i] = scalar
 
         super().__init__(default=arr)
-
 
 
 class HaarDistributedUnitary(Matrix):
@@ -656,6 +666,9 @@ class RandomDensityMatrix(Matrix):
 
 
 class BasisMatrix(Matrix):
+    """
+    Gives the (rectangular) elementary basis matrices ```E_{ij}``` 
+    """
     def __init__(self, i:int=2, j:int=2, order=3):
 
         if isinstance(order, tuple):
@@ -671,14 +684,14 @@ class BasisMatrix(Matrix):
                     arr[ii][jj] = 1
         super().__init__(default=arr)
 
-
-def get_matrix_basis(dim:int=2):
-    """Generate standard basis in M_n(C)"""
-    basis = {}
-    for ii in range(dim):
-        for jj in range(dim):
-            basis.setdefault('E' + str(ii + 1) + str(jj + 1), BasisMatrix(i= ii + 1, j = jj + 1, order= dim))
-    return basis
+    @staticmethod
+    def get_matrix_basis(dim:int=2):
+        """Generate standard basis in M_n(C)"""
+        basis = {}
+        for ii in range(dim):
+            for jj in range(dim):
+                basis.setdefault('E' + str(ii + 1) + str(jj + 1), BasisMatrix(i= ii + 1, j = jj + 1, order= dim))
+        return basis
 
 
 class HilbertMatrix(Matrix):
@@ -731,11 +744,9 @@ class PauliMatrix(Matrix):
         """
         super().__init__(default=self.pauli(j))
 
-
     @staticmethod
     def kronecker_delta(i, j):
         return 1 if i == j else 0
-
     
     def pauli(self, j):
         sigma_j = np.array([[self.kronecker_delta(j, 3), self.kronecker_delta(j, 1) - 1j * self.kronecker_delta(j, 2)],
