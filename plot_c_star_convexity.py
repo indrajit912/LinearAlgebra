@@ -26,14 +26,17 @@ INPUT_MATRIX = Matrix([
 
 # INPUT_MATRIX = RandomMatrix(order=10)
 
-LENGTH_OF_C_STAR_COMBINATION = 2
-SHOW_CONVEX_HULL = True
+LENGTH_OF_C_STAR_COMBINATION = 1
+SHOW_CONVEX_HULL = False
 
 ####################################################
 ####################################################
 
 
 class ConvexHull(Scene):
+    """
+    Plots the ConvexHull of a given set of complex numbers
+    """
     def construct(self):
 
         # Creating the number plane
@@ -96,7 +99,6 @@ class ConvexHull(Scene):
         return [complex_plane.n2p(z) for z in extreme_com_nums]
         
 
-
 class PlotEigenValues(Scene):
     
     def construct(self):
@@ -123,17 +125,6 @@ class PlotEigenValues(Scene):
             self.add(plane, hull_path, eigs_dots_to_plot, txt)
         else:
             self.add(plane, eigs_dots_to_plot, txt)
-
-
-    @staticmethod
-    def get_eigenvalues_as_complex_point(complex_plane:ComplexPlane, mat:Matrix):
-        """
-        Returns the eigenvalues for plotting on the complex plane
-
-        Returns
-        -------
-        """
-        return ConvexHull.convert_complex_nums_to_points(complex_plane, mat.eigen_values())
 
 
 class CStarConvexEigenValues(Scene):
