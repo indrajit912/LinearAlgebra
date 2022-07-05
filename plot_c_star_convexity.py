@@ -32,12 +32,12 @@ MATRICES = [
 ]
 
 # Change the matrix below
-INPUT_MATRIX =  MATRICES[0]
+INPUT_MATRIX =  RandomMatrix(order=5)
 
 # INPUT_MATRIX = RandomMatrix(order=5)
 
-LENGTH_OF_C_STAR_COMBINATION = 1
-SHOW_CONVEX_HULL = False
+LENGTH_OF_C_STAR_COMBINATION = 5
+SHOW_CONVEX_HULL = True
 
 ####################################################
 ####################################################
@@ -52,7 +52,7 @@ class ConvexHull(Scene):
         # Creating the number plane
         plane = self.get_number_plane().add_coordinates()
 
-        com_nums = self.generate_random_complex_numbers(lower=-3, upper=3)
+        com_nums = self.generate_random_complex_numbers(size=30, lower=-3, upper=3)
         com_points = self.convert_complex_nums_to_points(plane, com_nums)
 
         dots_to_plot = self.create_dots_from_complex_nums(com_points, color=ORANGE)
