@@ -623,14 +623,7 @@ class DiagonalMatrix(Matrix):
     Class for representing a diagonal matrix
     """
     def __init__(self, diagonal=[1, 2, 3]):
-
-        order = len(diagonal)
-    
-        arr = np.zeros((order, order))
-        for i in range(order):
-            for j in range(order):
-                arr[i][i] = diagonal[i]
-
+        arr = np.diag(np.array(diagonal))
         super().__init__(default=arr)
     
         
