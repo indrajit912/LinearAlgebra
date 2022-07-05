@@ -112,6 +112,46 @@ def get_c_star_convex_combination(mat:Matrix, length:int=2):
         return M.get_upper_left_block(size=n)
 
 
+def verify_conjecture(mat:Matrix, length_of_convex_combination:int=2, sample_size:int=100):
+    """
+    Checks whether the eigenvalues of a `random` C*-convex combination 
+    of the matrix `mat` lie inside the ConvexHull of the eigenvalues of `mat`.
+
+    Return
+    ------
+        `Bool`
+    """
+
+    k = length_of_convex_combination
+    print("\n****************** START ******************\n")
+    print(f"Given Matrix:\n\n\t{mat}\n")
+    print(f"Length of C*-convex Combination: {k}\n")
+    print(f"Sample size: {sample_size}\n")
+    print("**************************************************\n\n")
+
+
+    for i in range(sample_size):
+        print("."*100)
+        print()
+        print(f"{k}-length C*-convex Combination number: {i+1}\n")
+        
+        c_star_conv_comb = get_c_star_convex_combination(mat, length=k)
+        eigs = c_star_conv_comb.eigen_values()
+        bool_arr = np.array([check_complex_num_is_in_convex_hull(mat.eigen_values(), z) for z in eigs])
+        testpass = np.all(bool_arr)
+
+        if testpass:
+            print("True")
+        else:
+            print("CAUTION:: We found a C*-convex combination which doesn't verify the conjecture:\n\n")
+            print(mat)
+            print()
+
+        print("."*100)
+        print()
+    
+    print("\n****************** END ******************\n")
+
 def main():
 
     pass
