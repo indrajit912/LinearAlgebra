@@ -152,11 +152,16 @@ def verify_conjecture(mat:Matrix, length_of_convex_combination:int=2, sample_siz
     
     print("\n****************** END ******************\n")
 
+
+
 def main():
 
-    pass
+    cube_roots_of_unity = VandermondeMatrix.roots_of_unity()
+    D = DiagonalMatrix(cube_roots_of_unity)
+    length_conv = int(input("Please enter the length of the C*-convex combination: "))
+    size_sam = int(input("Enter the sample size: "))
 
-    
+    verify_conjecture(D, length_conv, size_sam)
 
 
 if __name__ == '__main__':
