@@ -144,8 +144,9 @@ def verify_conjecture(mat:Matrix, length_of_convex_combination:int=2, sample_siz
             print("True")
         else:
             print("CAUTION:: We found a C*-convex combination which doesn't verify the conjecture:\n\n")
-            print(mat)
+            # print(c_star_conv_comb)
             print()
+            break
 
         print("."*100)
         print()
@@ -153,11 +154,12 @@ def verify_conjecture(mat:Matrix, length_of_convex_combination:int=2, sample_siz
     print("\n****************** END ******************\n")
 
 
-
 def main():
 
     cube_roots_of_unity = VandermondeMatrix.roots_of_unity()
     D = DiagonalMatrix(cube_roots_of_unity)
+
+
     length_conv = int(input("Please enter the length of the C*-convex combination: "))
     size_sam = int(input("Enter the sample size: "))
 
