@@ -17,14 +17,24 @@ from convex_hull import generate_uniform_sample_points
 ################ Initial Data #######################
 #####################################################
 
-# Change the matrix below
-INPUT_MATRIX = Matrix([
+MATRICES = [
+    Matrix([
     [-1-1j, 0, 2],
     [0, 3*1j, 0],
     [0, 0, 2 + 1j]
-]) 
+]),
+    Matrix(
+    np.array([[ 0.17046478+0.j, -0.61354641+0.j,  0.76243969+0.j],
+       [-0.91854728+0.j,  0.34176622+0.j, -0.97306733+0.j],
+       [-0.82100522+0.j,  0.88829967+0.j,  0.80145739+0.j]])
+),
+    
+]
 
-# INPUT_MATRIX = RandomMatrix(order=10)
+# Change the matrix below
+INPUT_MATRIX =  MATRICES[0]
+
+# INPUT_MATRIX = RandomMatrix(order=5)
 
 LENGTH_OF_C_STAR_COMBINATION = 1
 SHOW_CONVEX_HULL = False

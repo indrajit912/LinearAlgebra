@@ -2,6 +2,7 @@
 
 ### Python ###
 testing.ipynb
+verify.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
