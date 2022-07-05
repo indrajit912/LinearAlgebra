@@ -632,7 +632,7 @@ class ScalarMatrix(Matrix):
 
         arr = np.zeros((order, order))
         for i in range(order):
-            for j in range(order):
+            for _ in range(order):
                 arr[i][i] = scalar
 
         super().__init__(default=arr)
