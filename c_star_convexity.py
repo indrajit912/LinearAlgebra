@@ -65,6 +65,21 @@ def check_complex_num_is_in_convex_hull(complex_nums=np.array([0, 1, 1j]), given
     return is_inside_convex_hull(vecs, p)
 
 
+def generate_c_star_convex_coeff(length:int=2, dim:int=3):
+    """
+    Returns {T_1,...,T_k} subset of M_n(C) satisfying \sum_{i=1}^{k}T_i^* T_i = I
+
+    Parameters:
+        `length`: length (i.e., k)  of the set {T_1,...,T_k}
+        `dim`: dimension of the underlying Hilbert space C^n
+    """
+
+    n, k = dim, length
+    U = HaarDistributedUnitary(size=n*k) # Generating a random unitary of size `nk by nk`
+
+    return U
+    
+
 def get_c_star_convex_combination(mat:Matrix, length:int=2):
     """
     Returns a random C-star convex combination of the given matrix of 
