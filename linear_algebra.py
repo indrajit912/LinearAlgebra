@@ -390,6 +390,11 @@ class Matrix:
         """
         return np.linalg.norm(x=self.matrix, ord='nuc')
 
+    def is_square(self):
+        """
+        Checks whether a matrix is square or not
+        """
+        return self.rows == self.cols
     
     @staticmethod
     def check_permutaion_matrix(arr):
