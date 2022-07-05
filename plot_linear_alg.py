@@ -19,7 +19,7 @@ from c_star_convexity import get_c_star_convex_combination
 cube_roots_of_unity = VandermondeMatrix.roots_of_unity()
 INPUT_MATRIX = DiagonalMatrix(cube_roots_of_unity)      # Change the matrix here
 
-LENGTH_OF_C_STAR_COMBINATION = 10
+LENGTH_OF_C_STAR_COMBINATION = 50
 
 ####################################################
 ####################################################
