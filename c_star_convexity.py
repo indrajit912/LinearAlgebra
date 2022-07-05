@@ -77,7 +77,11 @@ def generate_c_star_convex_coeff(length:int=2, dim:int=3):
     n, k = dim, length
     U = HaarDistributedUnitary(size=n*k) # Generating a random unitary of size `nk by nk`
 
-    return U
+    Un = Matrix(U.matrix[:n, :]) # first n many rows of U
+
+    c_star_coeffs = [Matrix(Un.matrix[:, i*n:(i+1)*n]) for i in range(k)]
+
+    return c_star_coeffs
     
 
 def get_c_star_convex_combination(mat:Matrix, length:int=2):
