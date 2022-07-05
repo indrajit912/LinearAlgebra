@@ -618,6 +618,22 @@ class RandomMatrix(Matrix):
         return ran_arr
 
 
+class DiagonalMatrix(Matrix):
+    """
+    Class for representing a diagonal matrix
+    """
+    def __init__(self, diagonal=[1, 2, 3]):
+
+        order = len(diagonal)
+    
+        arr = np.zeros((order, order))
+        for i in range(order):
+            for j in range(order):
+                arr[i][i] = diagonal[i]
+
+        super().__init__(default=arr)
+    
+        
 class ScalarMatrix(Matrix):
     def __init__(self, order:int=3, scalar=1):
 
