@@ -1,12 +1,11 @@
-# Script to plot stuffs from linear_algebra
+# Script to plot C*-convex combinations in M_n(C)
 #
 # Author: Indrajit Ghosh
 #
 # Date: Jul 02, 2022
+# Modified on: Jul 05, 2022
 #
 
-from cmath import e
-import csv
 from manim import *
 from linear_algebra import *
 from c_star_convexity import get_c_star_convex_combination
@@ -16,10 +15,15 @@ from c_star_convexity import get_c_star_convex_combination
 ################ Initial Data #######################
 #####################################################
 
-cube_roots_of_unity = VandermondeMatrix.roots_of_unity()
-INPUT_MATRIX = DiagonalMatrix(cube_roots_of_unity)      # Change the matrix here
+# Change the matrix below
+INPUT_MATRIX = Matrix([
+    [-1-1j, 0, 2],
+    [0, 3*1j, 0],
+    [0, 0, 2 + 1j]
+])      
 
-LENGTH_OF_C_STAR_COMBINATION = 50
+
+LENGTH_OF_C_STAR_COMBINATION = 1
 
 ####################################################
 ####################################################
@@ -39,9 +43,6 @@ class CStarConvexEigenValues(Scene):
                 "stroke_opacity": 0.4
             }
         )
-
-        # Unit circle
-        unit_circle = Circle(radius=1, color=GREY)
 
         D = INPUT_MATRIX # Input matrix
         D_cc = get_c_star_convex_combination(D, LENGTH_OF_C_STAR_COMBINATION) # c_star combination
