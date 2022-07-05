@@ -6,6 +6,63 @@
 #
 
 from linear_algebra import *
+from convex_hull import *
+
+
+def convert_1D_array_of_complex_nums_into_2D_array(arr:np.array=np.array([1+1j, 1j, -3])):
+    """
+    It converts the array of complex number: np.array([z1, z2, ..., zn]) and 
+    returns:
+                np.array([
+                    [z1.real, z1.imag],
+                    [z2.real, z2.imag],
+                            :
+                            :
+                    [zn.real, zn.imag]
+                ])
+
+    
+    Parameter
+    ---------
+        `np.array`: shape ```(N,)```, i.e. 1D array
+    Returns
+    -------
+        `np.array`: shape ```(N, 2)```
+
+    """
+    return np.array([(z.real, z.imag) for z in arr])
+
+
+def extreme_points_of_convex_hull(complex_numbers:np.array=np.array([1+1j, 1j, -3])):
+    """
+    Returns the extreme points of the given `complex_numbers`
+
+    Example
+    -------
+    >>> extreme_points_of_convex_hull()
+
+            array([-3.+0.j,  1.+1.j,  0.+1.j])
+       
+    """
+    arr = convert_1D_array_of_complex_nums_into_2D_array(complex_numbers)
+    vecs = get_vertices_of_convex_hull(arr)
+
+    return np.array([complex(v[0], v[1]) for v in vecs])
+
+
+def check_complex_num_is_in_convex_hull(complex_nums=np.array([0, 1, 1j]), given_num:complex=1+1j):
+    """
+    Checks whether a given complex number is inside the ConvexHull of `complex_nums
+
+    Return
+    ------
+        `Bool`
+    """
+
+    vecs = convert_1D_array_of_complex_nums_into_2D_array(complex_nums)
+    p = (given_num.real, given_num.imag)
+
+    return is_inside_convex_hull(vecs, p)
 
 
 def get_c_star_convex_combination(mat:Matrix, length:int=2):
