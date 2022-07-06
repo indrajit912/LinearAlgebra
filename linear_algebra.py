@@ -191,12 +191,14 @@ class Matrix:
     def __add__(self, other):
 
         # Addition with an object of type Matrix
-        if isinstance(other, Matrix):
+        if isinstance(other, Matrix) and type(other) == Matrix:
             return Matrix(self.matrix + other.matrix)
-
-        # Addition with scalars: we'll treat 'scalar' with corr 'scalar matrix'
-        elif isinstance(other, (int, float, complex)):
-            return Matrix(self.matrix + (other * np.eye(self.rows, self.cols)))
+        else:
+            # Addition with scalars: we'll treat 'scalar' with corr 'scalar matrix'
+            if isinstance(other, (int, float, complex)):
+                return Matrix(self.matrix + (other * np.eye(self.rows, self.cols)))
+            else:
+                return NotImplemented
 
 
     # Addition by Matrix from right
@@ -206,11 +208,13 @@ class Matrix:
     # Subtraction
     def __sub__(self, other):
 
-        if isinstance(other, Matrix):
+        if isinstance(other, Matrix) and type(other) == Matrix:
             return Matrix(self.matrix - other.matrix)
-        
-        elif isinstance(other, (int, float, complex)):
-            return Matrix(self.matrix - (other * np.eye(self.rows, self.cols)))
+        else:
+            if isinstance(other, (int, float, complex)):
+                return Matrix(self.matrix - (other * np.eye(self.rows, self.cols)))
+            else:
+                return NotImplemented
 
     
     def __rsub__(self, other):
@@ -221,12 +225,16 @@ class Matrix:
     def __mul__(self, other):
         
         # Matrix Multiplication
-        if isinstance(other, Matrix):
+        if isinstance(other, Matrix) and type(other) == Matrix:
             return Matrix(np.matmul(self.matrix, other.matrix))
 
-        # Scalar Multiplication
-        if isinstance(other, (int, float, complex)):
-            return Matrix(other * self.matrix)
+        else:
+            # Scalar Multiplication
+            if isinstance(other, (int, float, complex)):
+                return Matrix(other * self.matrix)
+            else:
+                return NotImplemented
+
 
     # Multiplication by Matrix from right
     def __rmul__(self, other):
@@ -972,7 +980,7 @@ class PauliMatrix(Matrix):
         sigma_j = np.array([[self.kronecker_delta(j, 3), self.kronecker_delta(j, 1) - 1j * self.kronecker_delta(j, 2)],
                        [self.kronecker_delta(j, 1) + 1j * self.kronecker_delta(j, 2), - self.kronecker_delta(j, 3)]])
         return sigma_j
-        
+
 
 class Vector(Matrix):
     """Class Representing a Vector"""
@@ -986,8 +994,6 @@ class Vector(Matrix):
         else:
             super().__init__(default, order=(dim, 1))
 
-        self.norm = np.sqrt(self.dot(self)).real
-
     
     def __getitem__(self, key):
         return super().__getitem__((key, 1))
@@ -995,9 +1001,37 @@ class Vector(Matrix):
     def __setitem__(self, key, value):
         return super().__setitem__((key, 1), value)
 
+    def __add__(self, other):
+        if isinstance(other, Vector):
+            return Vector(self.matrix + other.matrix)
+
+    def __radd__(self, other):
+        return self.__add__(other)
+    
+    def __sub__(self, other):
+        if isinstance(other, Vector):
+            return self.__add__(other.__mul__(-1))
+
+        if isinstance(other, (int, float, complex)):
+            return Vector(self.matrix - other)
+    
+    def __rsub__(self, other):
+        if isinstance(other, (int, float, complex)):
+            return Vector(2 - self.matrix)
+        if isinstance(other, Vector):
+            return other.__sub__(self)
+
     def __mul__(self, other):
         if isinstance(other, (int, float, complex)):
             return Vector(super().__mul__(other).vector_array())
+
+    def __rmul__(self, other):
+        if isinstance(other, Matrix):
+            return Vector(np.matmul(other.matrix, self.matrix))
+        
+        elif isinstance(other, (int, float, complex)):
+            return self.__mul__(other)
+
 
     def __truediv__(self, other):
         if isinstance(other, (int, float, complex)):
@@ -1027,7 +1061,14 @@ class Vector(Matrix):
         """Hermitian inner product"""
         if isinstance(other, Vector):
             z_matrix = other.star() * self
-            return z_matrix[1, 1]
+            return z_matrix[1]
+        else:
+            return NotImplementedError("`dot` product can only be performed between two Vectors!")
+
+    def norm(self):
+        """Calculates the Hermitian norm of the Vector"""
+        return np.sqrt(self.dot(self).real)
+
 
     def is_orthogonal(self, other):
         if np.allclose(self.dot(other), 0):
