@@ -6,6 +6,8 @@
 # Modified on: Jul 06, 2022
 #
 
+# TODO: Add `Convex Optimization Solver`: Source: "https://www.cvxpy.org/"
+
 import sympy as sp
 import numpy as np
 
@@ -1020,6 +1022,8 @@ class Vector(Matrix):
         >>> v.norm()
 
             2.23606797749979
+
+        >>> RandomVector(dim=2, desired_norm=2)
 
     """
 
