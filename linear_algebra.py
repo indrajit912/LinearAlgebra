@@ -74,6 +74,18 @@ class Matrix:
 
     def __repr__(self):
 
+        class_name = "Matrix"
+
+        # arr = [[self.matrix[i][j] for j in range(self.cols)] for i in range(self.cols)]
+        arr_str = np.array2string(self.matrix, separator=', ')
+
+        rep = class_name + '(\n' + arr_str + '\n)'
+
+        return rep
+        
+
+    def __str__(self):
+
         indent = '     '
         mat = '\n'
 
@@ -531,6 +543,16 @@ class Vector(Matrix):
         >>> RandomVector(dim=2, desired_norm=2)
 
     """
+
+    def __repr__(self):
+    
+        class_name = "Vector"
+
+        arr_str = np.array2string(self.vector_array(), separator=', ')
+
+        rep = class_name + '(' + arr_str + ')'
+
+        return rep
 
     def __init__(self, default, dim:int=None):
         """
