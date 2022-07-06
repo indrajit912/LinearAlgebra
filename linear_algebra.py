@@ -983,7 +983,45 @@ class PauliMatrix(Matrix):
 
 
 class Vector(Matrix):
-    """Class Representing a Vector"""
+    """
+    Class Representing a Vector
+
+    Parameters
+    ----------
+        `default`: `list` or `np.ndarray` or `int/float/complex`
+        `dim`: `int`= None (optional, needed only if `default` is `int/float/complex`)
+
+    Returns
+    -------
+        ```Vector```
+
+    Examples
+    --------
+        >>> Vector(default=3.2, dim=2)
+            
+            (3.2+0j)     
+
+            (3.2+0j) 
+
+        >>> v = Vector([1, 0, 2j])
+        >>> v
+
+            (1+0j)     
+
+              0j       
+      
+              2j  
+
+        >>> v[1]
+
+            (1+0j)
+
+        >>> v.norm()
+
+            2.23606797749979
+
+    """
+
     def __init__(self, default, dim:int=None):
         """
             'default': 1D array
@@ -1046,7 +1084,7 @@ class Vector(Matrix):
     
     def unit(self):
         """Returns the unit vector along that direction"""
-        arr = [val / self.norm for val in self.vector_array()]
+        arr = [val / self.norm() for val in self.vector_array()]
         return Vector(arr)
 
     def component_along(self, v):
@@ -1055,7 +1093,6 @@ class Vector(Matrix):
     
     def star(self):
         return super().star()
-
 
     def dot(self, other):
         """Hermitian inner product"""
