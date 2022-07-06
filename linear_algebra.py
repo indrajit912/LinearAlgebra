@@ -195,7 +195,7 @@ class Matrix:
     def __add__(self, other):
 
         # Addition with an object of type Matrix
-        if isinstance(other, Matrix) and type(other) == Matrix:
+        if isinstance(other, Matrix) and type(other) != Vector:
             return Matrix(self.matrix + other.matrix)
         else:
             # Addition with scalars: we'll treat 'scalar' with corr 'scalar matrix'
@@ -212,7 +212,7 @@ class Matrix:
     # Subtraction
     def __sub__(self, other):
 
-        if isinstance(other, Matrix) and type(other) == Matrix:
+        if isinstance(other, Matrix) and type(other) != Vector:
             return Matrix(self.matrix - other.matrix)
         else:
             if isinstance(other, (int, float, complex)):
@@ -229,7 +229,7 @@ class Matrix:
     def __mul__(self, other):
         
         # Matrix Multiplication
-        if isinstance(other, Matrix) and type(other) == Matrix:
+        if isinstance(other, Matrix) and type(other) != Vector:
             return Matrix(np.matmul(self.matrix, other.matrix))
 
         else:
@@ -776,6 +776,7 @@ class RandomMatrix(Matrix):
             arr = self.generate_complex_random_array(size=(rows, cols), lower=a, upper=b)
 
         super().__init__(default=arr)
+
 
     @staticmethod
     def generate_real_random_array(size:tuple=(2, 2), lower:float=-1, upper:float=1):
