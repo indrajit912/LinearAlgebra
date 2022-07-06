@@ -3,6 +3,7 @@
 # Author: Indrajit Ghosh
 #
 # Date: Dec 24, 2021
+# Modified on: Jul 06, 2022
 #
 
 import sympy as sp
@@ -1123,7 +1124,7 @@ class Vector(Matrix):
     
     def as_projection_operator(self):
         """Projection operator onto the 1D space spanned by that vector"""
-        n = 1 / (self.norm ** 2)
+        n = 1 / (self.norm() ** 2)
         return super().__mul__(self.star()).__mul__(n)
 
 
