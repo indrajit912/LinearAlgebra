@@ -27,11 +27,12 @@ class Matrix:
 
     Parameters
     ----------
-        `default`: 2D list (or numpy 2D array)
+        `default`: `2Dlist` or 2D `np.ndarray` or `int/float/complex`
+        `order`: `int` or `tuple`= None (optional, needed only if `default` is `int/float/complex`)
 
     Returns
     -------
-        An ```Matrix``` class object
+        ``Matrix```
 
 
     Examples
@@ -46,7 +47,7 @@ class Matrix:
         >>> A
         >>>
         >>> arr = np.arange(0, 9, 1).reshape(3, 3)
-        >>> mat = Matrix(default=arr)
+        >>> mat = Matrix(default=7, order=(3, 2))
         >>> mat.prettify()
 
     """
@@ -480,6 +481,168 @@ class Matrix:
         V is partial isometry iff VV* is projection
         """
         return self.__mul__(self.star()).is_projection()
+
+
+
+###########################################################################################
+###########################################################################################
+################                 Complex Vectors                ###########################
+###########################################################################################
+###########################################################################################
+
+class Vector(Matrix):
+    """
+    Class Representing a complex Vector
+
+    Parameters
+    ----------
+        `default`: `list` or `np.ndarray` or `int/float/complex`
+        `dim`: `int`= None (optional, needed only if `default` is `int/float/complex`)
+
+    Returns
+    -------
+        ```Vector```
+
+    Examples
+    --------
+        >>> Vector(default=3.2, dim=2)
+            
+            (3.2+0j)     
+
+            (3.2+0j) 
+
+        >>> v = Vector([1, 0, 2j])
+        >>> v
+
+            (1+0j)     
+
+              0j       
+      
+              2j  
+
+        >>> v[1]
+
+            (1+0j)
+
+        >>> v.norm()
+
+            2.23606797749979
+
+        >>> RandomVector(dim=2, desired_norm=2)
+
+    """
+
+    def __init__(self, default, dim:int=None):
+        """
+            'default': 1D array
+        """
+        if isinstance(default, (list, np.ndarray)):
+            vals = np.array(default).reshape(len(default), 1) 
+            super().__init__(default=vals)
+        else:
+            super().__init__(default, order=(dim, 1))
+
+    
+    def __getitem__(self, key):
+        return super().__getitem__((key, 1))
+    
+    def __setitem__(self, key, value):
+        return super().__setitem__((key, 1), value)
+
+    def __add__(self, other):
+        if isinstance(other, Vector):
+            return Vector(self.matrix + other.matrix)
+
+    def __radd__(self, other):
+        return self.__add__(other)
+    
+    def __sub__(self, other):
+        if isinstance(other, Vector):
+            return self.__add__(other.__mul__(-1))
+
+        if isinstance(other, (int, float, complex)):
+            return Vector(self.matrix - other)
+    
+    def __rsub__(self, other):
+        if isinstance(other, (int, float, complex)):
+            return Vector(2 - self.matrix)
+        if isinstance(other, Vector):
+            return other.__sub__(self)
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float, complex)):
+            return Vector(super().__mul__(other).vector_array())
+
+    def __rmul__(self, other):
+        if isinstance(other, Matrix):
+            return Vector(np.matmul(other.matrix, self.matrix))
+        
+        elif isinstance(other, (int, float, complex)):
+            return self.__mul__(other)
+
+
+    def __truediv__(self, other):
+        if isinstance(other, (int, float, complex)):
+            if other == 0:
+                raise ZeroDivisionError("You cannot divide by zero!")
+            else:
+                return Vector(self.__mul__(1 / other).vector_array())
+
+        else:
+            raise ValueError("You cannot divide by a vector!")
+
+    
+    def unit(self):
+        """Returns the unit vector along that direction"""
+        arr = [val / self.norm() for val in self.vector_array()]
+        return Vector(arr)
+
+    def component_along(self, v):
+        """Return the component of 'self' along the vector v"""
+        return (self.dot(v) / v.dot(v)) * v
+    
+    def star(self):
+        return super().star()
+
+    def dot(self, other):
+        """Hermitian inner product"""
+        if isinstance(other, Vector):
+            z_matrix = other.star() * self
+            return z_matrix[1]
+        else:
+            return NotImplementedError("`dot` product can only be performed between two Vectors!")
+
+    def norm(self):
+        """Calculates the Hermitian norm of the Vector"""
+        return np.sqrt(self.dot(self).real)
+
+
+    def is_orthogonal(self, other):
+        if np.allclose(self.dot(other), 0):
+            return True
+        else:
+            return False
+
+
+    def tensor(self, w):
+        """
+        Return the tensor product of 'self' and 'w'
+        """
+        return super().__mul__(w.star())
+
+    
+    def as_projection_operator(self):
+        """Projection operator onto the 1D space spanned by that vector"""
+        n = 1 / (self.norm() ** 2)
+        return super().__mul__(self.star()).__mul__(n)
+
+
+
+#################################################################################
+#################################################################################
+################## Classes based on `Matrix` and `Vector` ######################
+#################################################################################
+#################################################################################
 
 
 class BlockDiagonalMatrix(Matrix):
@@ -985,153 +1148,6 @@ class PauliMatrix(Matrix):
         return sigma_j
 
 
-class Vector(Matrix):
-    """
-    Class Representing a Vector
-
-    Parameters
-    ----------
-        `default`: `list` or `np.ndarray` or `int/float/complex`
-        `dim`: `int`= None (optional, needed only if `default` is `int/float/complex`)
-
-    Returns
-    -------
-        ```Vector```
-
-    Examples
-    --------
-        >>> Vector(default=3.2, dim=2)
-            
-            (3.2+0j)     
-
-            (3.2+0j) 
-
-        >>> v = Vector([1, 0, 2j])
-        >>> v
-
-            (1+0j)     
-
-              0j       
-      
-              2j  
-
-        >>> v[1]
-
-            (1+0j)
-
-        >>> v.norm()
-
-            2.23606797749979
-
-        >>> RandomVector(dim=2, desired_norm=2)
-
-    """
-
-    def __init__(self, default, dim:int=None):
-        """
-            'default': 1D array
-        """
-        if isinstance(default, (list, np.ndarray)):
-            vals = np.array(default).reshape(len(default), 1) 
-            super().__init__(default=vals)
-        else:
-            super().__init__(default, order=(dim, 1))
-
-    
-    def __getitem__(self, key):
-        return super().__getitem__((key, 1))
-    
-    def __setitem__(self, key, value):
-        return super().__setitem__((key, 1), value)
-
-    def __add__(self, other):
-        if isinstance(other, Vector):
-            return Vector(self.matrix + other.matrix)
-
-    def __radd__(self, other):
-        return self.__add__(other)
-    
-    def __sub__(self, other):
-        if isinstance(other, Vector):
-            return self.__add__(other.__mul__(-1))
-
-        if isinstance(other, (int, float, complex)):
-            return Vector(self.matrix - other)
-    
-    def __rsub__(self, other):
-        if isinstance(other, (int, float, complex)):
-            return Vector(2 - self.matrix)
-        if isinstance(other, Vector):
-            return other.__sub__(self)
-
-    def __mul__(self, other):
-        if isinstance(other, (int, float, complex)):
-            return Vector(super().__mul__(other).vector_array())
-
-    def __rmul__(self, other):
-        if isinstance(other, Matrix):
-            return Vector(np.matmul(other.matrix, self.matrix))
-        
-        elif isinstance(other, (int, float, complex)):
-            return self.__mul__(other)
-
-
-    def __truediv__(self, other):
-        if isinstance(other, (int, float, complex)):
-            if other == 0:
-                raise ZeroDivisionError("You cannot divide by zero!")
-            else:
-                return Vector(self.__mul__(1 / other).vector_array())
-
-        else:
-            raise ValueError("You cannot divide by a vector!")
-
-    
-    def unit(self):
-        """Returns the unit vector along that direction"""
-        arr = [val / self.norm() for val in self.vector_array()]
-        return Vector(arr)
-
-    def component_along(self, v):
-        """Return the component of 'self' along the vector v"""
-        return (self.dot(v) / v.dot(v)) * v
-    
-    def star(self):
-        return super().star()
-
-    def dot(self, other):
-        """Hermitian inner product"""
-        if isinstance(other, Vector):
-            z_matrix = other.star() * self
-            return z_matrix[1]
-        else:
-            return NotImplementedError("`dot` product can only be performed between two Vectors!")
-
-    def norm(self):
-        """Calculates the Hermitian norm of the Vector"""
-        return np.sqrt(self.dot(self).real)
-
-
-    def is_orthogonal(self, other):
-        if np.allclose(self.dot(other), 0):
-            return True
-        else:
-            return False
-
-
-    def tensor(self, w):
-        """
-        Return the tensor product of 'self' and 'w'
-        """
-        return super().__mul__(w.star())
-
-    
-    def as_projection_operator(self):
-        """Projection operator onto the 1D space spanned by that vector"""
-        n = 1 / (self.norm() ** 2)
-        return super().__mul__(self.star()).__mul__(n)
-
-
 class BasisVector(Vector):
 
     def __init__(self, dim: int = 3, i:int=1):
@@ -1186,6 +1202,12 @@ class RandomQuantumState(RandomVector):
     def __init__(self, dim: int = 3, **kwargs):
         super().__init__(dim, desired_norm=1, **kwargs)
 
+
+###########################################################################################
+###########################################################################################
+################                System of Equations             ###########################
+###########################################################################################
+###########################################################################################
 
 class SystemOfLinearEquations:
     """class representing a system of linear equation"""
