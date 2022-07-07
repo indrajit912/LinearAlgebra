@@ -8,6 +8,7 @@
 
 # TODO: Add `Convex Optimization Solver`: Source: "https://www.cvxpy.org/"
 
+from re import M
 import sympy as sp
 import numpy as np
 
@@ -772,7 +773,7 @@ class RandomMatrix(Matrix):
 
     Parameters
     ----------
-        `order`: int
+        `order`: int or tuple
         `lower`: float; 
             this is the value of `a`. default will be `-1`
         `upper`: float; 
@@ -813,6 +814,62 @@ class RandomMatrix(Matrix):
         ran_arr2 = (b - a) * np.random.random_sample(size=(size[0], size[1])) + a # Uniform[a, b); b>a
         ran_arr = ran_arr1 + 1j * ran_arr2
         return ran_arr
+
+
+class RandomGaussianMatrix(Matrix):
+    """
+    Generates a random matrix whose entries are `Normal(m, sigma)` distributed
+
+    Parameters
+    ----------
+        `order`: int or tuple
+        `m`: float; 
+            mean of the Normal distribution
+        `sigma`: float; 
+            standard deviation of the Normal distribution
+        `_complex`:bool
+            default ```True```
+            if `_complex` is `True` then the class will generate a random 
+            matrix with complex entries otherwise real entries.
+    """
+    def __init__(self, order=2, mean=0, sigma=1, _complex:bool=True):
+
+        if isinstance(order, tuple):
+            rows = order[0]
+            cols = order[1]
+        if isinstance(order, int):
+            rows = cols = order
+
+        choice = np.random.choice(['Real', 'Complex']) if _complex else 'Real'
+        if choice == 'Real':
+            arr = self.random_real_normal_sample(shape=(rows, cols), m=mean, sigma=sigma)
+        else:
+            arr = self.random_complex_normal_sample(shape=(rows, cols), m=mean, sigma=sigma)
+
+        super().__init__(default=arr)
+
+
+    @staticmethod
+    def random_real_normal_sample(shape:tuple=(3, 2), m:float=0, sigma:float=1):
+        """
+        Parameters
+        ----------
+            `tuple`:(int, ..., int)
+
+        Returns
+        --------
+            `ndarray`: array of floating-point samples from the standard normal distribution
+        """
+        return m + sigma * np.random.randn(*shape)
+    
+    @staticmethod
+    def random_complex_normal_sample(**kwargs):
+        """
+        Complex normal sampling
+        """
+        arr = RandomGaussianMatrix.random_real_normal_sample(**kwargs) + 1j * RandomGaussianMatrix.random_real_normal_sample(**kwargs)
+        return arr
+
 
 
 class DiagonalMatrix(Matrix):
