@@ -364,6 +364,18 @@ class Matrix:
         return self.matrix.flatten()
 
 
+    def col_sum(self, col:int=1):
+        """
+        Calculate the sum of the given col
+        """
+        return np.sum(self.matrix, axis=0)[(col-1) % self.cols]
+
+    def row_sum(self, row:int=1):
+        """
+        Calculate the sum of the given row
+        """
+        return np.sum(self.matrix, axis=1)[(row-1) % self.rows]
+
     def lp_norm(self, p=2):
         """
         Calculates l^p norm
@@ -1021,6 +1033,41 @@ class RandomOrthogonalMatrix(Matrix):
         Q1 = np.dot(Q, lam)
 
         return Q1
+
+
+class RandomDoublyStochasticMatrix(Matrix):
+    """
+    A class that gives a random DoublyStochasticMatrix, which is a 
+    matrix of nonnegative real numbers, each of whose rows and columns sums to 1
+
+    Parameter
+    ---------
+    `size`: integer
+            dimension of the matrix
+
+    Returns
+    -------
+    An object of the class `Matrix`
+
+
+    Algorithm
+    ---------
+        1. Generate a RandomOrthogonalMatrix, say, O = [O_ij]
+        2. Return the matrix [|O_ij|^2]
+
+    Example
+    -------
+    >>> from linear_algebra import RandomDoublyStochasticMatrix
+    >>> O = RandomDoublyStochasticMatrix(size=3)
+    >>> O
+
+    """
+    def __init__(self, size:int=3):
+
+        ortho_arr = RandomOrthogonalMatrix.orthogonal_group_generator(size)
+        stocha_arr = np.vectorize(lambda z: np.abs(z) ** 2)(ortho_arr)
+
+        super().__init__(default=stocha_arr)
         
 
 class RandomDensityMatrix(Matrix):
