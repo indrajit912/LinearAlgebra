@@ -918,6 +918,31 @@ class RandomGaussianMatrix(Matrix):
         return arr
 
 
+class RandomBooleanMatrix(Matrix):
+    """
+    Class for a random boolean matrix
+
+    Parameters
+    ----------
+        `order`: tuple or int
+        `p`: float (must be in [0, 1])
+
+    Returns
+    --------
+        `Matrix`
+
+    """
+    def __init__(self, order=3, p:float=0.5):
+
+        if isinstance(order, tuple):
+            rows = order[0]
+            cols = order[1]
+        if isinstance(order, int):
+            rows = cols = order
+
+        arr = np.random.rand(rows, cols) > p
+        super().__init__(default=arr)
+
 
 class DiagonalMatrix(Matrix):
     """
