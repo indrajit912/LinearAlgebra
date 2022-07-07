@@ -507,6 +507,41 @@ class Matrix:
         """
         return self.__mul__(self.star()).is_projection()
 
+    
+    def is_row_stochastic(self):
+        """
+        Checks whether it is `row` stochastic, i.e., non-negative square matrix 
+        with each row summing to 1
+        """
+        arr = self.matrix
+        ones = np.ones(shape=(len(arr),))
+        nonNeg = np.all(arr >= 0)
+        square = arr.shape[0] == arr.shape[1]
+        row_sum_one = np.allclose(np.sum(arr, axis=0), ones)
+
+        return square and nonNeg and row_sum_one
+
+    def is_col_stochastic(self):
+        """
+        Checks whether it is `col` stochastic, i.e., non-negative square matrix 
+        with each col summing to 1
+        """
+        arr = self.matrix
+        ones = np.ones(shape=(len(arr),))
+        nonNeg = np.all(arr >= 0)
+        square = arr.shape[0] == arr.shape[1]
+        col_sum_one = np.allclose(np.sum(arr, axis=1), ones)
+
+        return square and nonNeg and col_sum_one
+
+    def is_stochastic(self):
+        """
+        Checks whether it is doubly stochastic, i.e., non-negative square matrix 
+        with each row and col summing to 1
+        """
+        return self.is_row_stochastic() and self.is_col_stochastic()
+
+
 
 
 ###########################################################################################
