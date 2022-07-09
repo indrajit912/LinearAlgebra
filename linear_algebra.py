@@ -52,7 +52,7 @@ class Matrix:
 
     """
 
-    def __init__(self, default, order=None, _complex:bool=True, **kwargs):
+    def __init__(self, default, order=None, _complex:bool=True):
         """
             'default': 2D list (or numpy 2D array)
             'order': tuple or int
