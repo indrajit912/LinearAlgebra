@@ -8,7 +8,6 @@
 
 # TODO: Add `Convex Optimization Solver`: Source: "https://www.cvxpy.org/"
 
-from re import M
 import sympy as sp
 import numpy as np
 
