@@ -53,7 +53,7 @@ class Matrix:
 
     """
 
-    def __init__(self, default, order=None):
+    def __init__(self, default, order=None, _complex:bool=True, **kwargs):
         """
             'default': 2D list (or numpy 2D array)
             'order': tuple or int
@@ -70,7 +70,10 @@ class Matrix:
 
         self.order = (self.rows, self.cols)
 
-        self.matrix = np.full((self.rows, self.cols), default, dtype='complex') if order != None else np.asarray(default, dtype='complex')
+        if _complex:
+            self.matrix = np.full((self.rows, self.cols), default, dtype='complex') if order != None else np.asarray(default, dtype='complex')
+        else:
+            self.matrix = np.full((self.rows, self.cols), default) if order != None else np.asarray(default)
 
 
     def __repr__(self):
@@ -592,17 +595,7 @@ class Vector(Matrix):
 
     """
 
-    def __repr__(self):
-    
-        class_name = "Vector"
-
-        arr_str = np.array2string(self.vector_array(), separator=', ')
-
-        rep = class_name + '(' + arr_str + ')'
-
-        return rep
-
-    def __init__(self, default, dim:int=None):
+    def __init__(self, default, dim:int=None, **kwargs):
         """
             'default': 1D array
         """
@@ -610,7 +603,18 @@ class Vector(Matrix):
             vals = np.array(default).reshape(len(default), 1) 
             super().__init__(default=vals)
         else:
-            super().__init__(default, order=(dim, 1))
+            super().__init__(default, order=(dim, 1), **kwargs)
+
+
+    def __repr__(self):
+        
+        class_name = "Vector"
+
+        arr_str = np.array2string(self.vector_array(), separator=', ')
+
+        rep = class_name + '(' + arr_str + ')'
+
+        return rep
 
     
     def __getitem__(self, key):
@@ -738,9 +742,9 @@ class BlockDiagonalMatrix(Matrix):
         [0, 0, 1]
     ]
 
-    def __init__(self, blocks:list=[I2, I3]):
+    def __init__(self, blocks:list=[I2, I3], **kwargs):
         arr = self.block_matrix(blocks)
-        super().__init__(default=arr)
+        super().__init__(default=arr, **kwargs)
 
 
     @staticmethod
@@ -810,8 +814,8 @@ class BlockDiagonalMatrix(Matrix):
 
 class Identity(Matrix):
     """Identity Matrix of order n"""
-    def __init__(self, size:int=3):
-        super().__init__(default=np.eye(size))
+    def __init__(self, size:int=3, **kwargs):
+        super().__init__(default=np.eye(size), _complex=False, **kwargs)
 
 
 class RandomMatrix(Matrix):
@@ -830,7 +834,7 @@ class RandomMatrix(Matrix):
             if `_complex` is `True` then the class will generate a random 
             matrix with complex entries otherwise real entries.
     """
-    def __init__(self, order=2, lower=-1, upper=1, _complex:bool=True):
+    def __init__(self, order=2, lower=-1, upper=1, _complex:bool=True, **kwargs):
 
         if isinstance(order, tuple):
             rows = order[0]
@@ -845,7 +849,7 @@ class RandomMatrix(Matrix):
         else:
             arr = self.generate_complex_random_array(size=(rows, cols), lower=a, upper=b)
 
-        super().__init__(default=arr)
+        super().__init__(default=arr, _complex=_complex, **kwargs)
 
 
     @staticmethod
@@ -879,7 +883,7 @@ class RandomGaussianMatrix(Matrix):
             if `_complex` is `True` then the class will generate a random 
             matrix with complex entries otherwise real entries.
     """
-    def __init__(self, order=2, mean=0, sigma=1, _complex:bool=True):
+    def __init__(self, order=2, mean=0, sigma=1, _complex:bool=True, **kwargs):
 
         if isinstance(order, tuple):
             rows = order[0]
@@ -893,7 +897,7 @@ class RandomGaussianMatrix(Matrix):
         else:
             arr = self.random_complex_normal_sample(shape=(rows, cols), m=mean, sigma=sigma)
 
-        super().__init__(default=arr)
+        super().__init__(default=arr, _complex=_complex, **kwargs)
 
 
     @staticmethod
@@ -932,7 +936,7 @@ class RandomBooleanMatrix(Matrix):
         `Matrix`
 
     """
-    def __init__(self, order=3, p:float=0.5):
+    def __init__(self, order=3, p:float=0.5, **kwargs):
 
         if isinstance(order, tuple):
             rows = order[0]
@@ -941,27 +945,27 @@ class RandomBooleanMatrix(Matrix):
             rows = cols = order
 
         arr = np.random.rand(rows, cols) > p
-        super().__init__(default=arr)
+        super().__init__(default=arr, _complex=False, **kwargs)
 
 
 class DiagonalMatrix(Matrix):
     """
     Class for representing a diagonal matrix
     """
-    def __init__(self, diagonal=[1, 2, 3]):
+    def __init__(self, diagonal=[1, 2, 3], **kwargs):
         arr = np.diag(np.array(diagonal))
-        super().__init__(default=arr)
+        super().__init__(default=arr, **kwargs)
     
         
 class ScalarMatrix(Matrix):
-    def __init__(self, order:int=3, scalar=1):
+    def __init__(self, order:int=3, scalar=1, **kwargs):
 
         arr = np.zeros((order, order))
         for i in range(order):
             for _ in range(order):
                 arr[i][i] = scalar
 
-        super().__init__(default=arr)
+        super().__init__(default=arr, **kwargs)
 
 
 class HaarDistributedUnitary(Matrix):
@@ -989,11 +993,11 @@ class HaarDistributedUnitary(Matrix):
     >>> H
 
     """
-    def __init__(self, size:int=2):
+    def __init__(self, size:int=2, **kwargs):
 
         random_arr = self.unitary_group_generator(size=size)
 
-        super().__init__(default=random_arr)
+        super().__init__(default=random_arr, **kwargs)
 
 
     @staticmethod
@@ -1056,11 +1060,11 @@ class RandomOrthogonalMatrix(Matrix):
     >>> O
 
     """
-    def __init__(self, size:int=2):
+    def __init__(self, size:int=2, **kwargs):
 
         random_arr = self.orthogonal_group_generator(size=size)
 
-        super().__init__(default=random_arr)
+        super().__init__(default=random_arr, _complex=False, **kwargs)
 
 
     @staticmethod
@@ -1122,12 +1126,12 @@ class RandomDoublyStochasticMatrix(Matrix):
     >>> O
 
     """
-    def __init__(self, size:int=3):
+    def __init__(self, size:int=3, **kwargs):
 
         ortho_arr = RandomOrthogonalMatrix.orthogonal_group_generator(size)
         stocha_arr = np.vectorize(lambda z: np.abs(z) ** 2)(ortho_arr)
 
-        super().__init__(default=stocha_arr)
+        super().__init__(default=stocha_arr, _complex=False, **kwargs)
         
 
 class RandomDensityMatrix(Matrix):
@@ -1161,7 +1165,7 @@ class RandomDensityMatrix(Matrix):
     >>> rho.prettify()
 
     """
-    def __init__(self, size:int=2, lower=-1, upper=1, _complex:bool=True):
+    def __init__(self, size:int=2, lower=-1, upper=1, _complex:bool=True, **kwargs):
 
         a = lower
         b = upper
@@ -1172,7 +1176,7 @@ class RandomDensityMatrix(Matrix):
         else:
             density_mat = self.generate_complex_density_matrix(size=size, lower=a, upper=b)
 
-        super().__init__(default=density_mat)
+        super().__init__(default=density_mat, _complex=_complex, **kwargs)
 
     
     @staticmethod
@@ -1213,7 +1217,7 @@ class BasisMatrix(Matrix):
     """
     Gives the (rectangular) elementary basis matrices ```E_{ij}``` 
     """
-    def __init__(self, i:int=2, j:int=2, order=3):
+    def __init__(self, i:int=2, j:int=2, order=3, **kwargs):
 
         if isinstance(order, tuple):
             rows = order[0]
@@ -1226,7 +1230,7 @@ class BasisMatrix(Matrix):
             for jj in range(cols):
                 if (ii + 1, jj + 1) == (i, j):
                     arr[ii][jj] = 1
-        super().__init__(default=arr)
+        super().__init__(default=arr, _complex=False, **kwargs)
 
     @staticmethod
     def get_matrix_basis(dim:int=2):
@@ -1241,20 +1245,20 @@ class BasisMatrix(Matrix):
 class HilbertMatrix(Matrix):
     """Hilbert Matrix"""
 
-    def __init__(self, size:int=5):
+    def __init__(self, size:int=5, **kwargs):
 
         mat = np.zeros((size, size))
         for i in range(size):
             for j in range(size):
                 mat[i][j] = 1 / (i +  j + 1)
 
-        super().__init__(default=mat)
+        super().__init__(default=mat, **kwargs)
 
 
 class JordanBlock(Matrix):
     """Jordan Block matrix"""
 
-    def __init__(self, size:int, scalar):
+    def __init__(self, size:int, scalar, **kwargs):
 
         mat = np.zeros((size, size))
         for i in range(size):
@@ -1264,7 +1268,7 @@ class JordanBlock(Matrix):
                 if j == i:
                     mat[i][i] = scalar
         
-        super().__init__(default=mat)
+        super().__init__(default=mat, **kwargs)
 
 
 class VandermondeMatrix(Matrix):
@@ -1284,9 +1288,9 @@ class VandermondeMatrix(Matrix):
         `Matrix`
 
     """
-    def __init__(self, scalars:list=[1, 2, 3, 4, 5], cols:int=4):
+    def __init__(self, scalars:list=[1, 2, 3, 4, 5], cols:int=4, **kwargs):
         mat = self.vandermonde(scalars=scalars, cols=cols)
-        super().__init__(default=mat)
+        super().__init__(default=mat, **kwargs)
 
     
     @staticmethod
@@ -1319,11 +1323,11 @@ class VandermondeMatrix(Matrix):
 
 
 class PauliMatrix(Matrix):
-    def __init__(self, j:int=1):
+    def __init__(self, j:int=1, **kwargs):
         """
             n = 1, 2, 3
         """
-        super().__init__(default=self.pauli(j))
+        super().__init__(default=self.pauli(j), **kwargs)
 
     @staticmethod
     def kronecker_delta(i, j):
@@ -1337,12 +1341,12 @@ class PauliMatrix(Matrix):
 
 class BasisVector(Vector):
 
-    def __init__(self, dim: int = 3, i:int=1):
+    def __init__(self, dim: int = 3, i:int=1, **kwargs):
         arr = np.zeros(dim)
         for id, e in enumerate(arr):
             if id + 1 == i:
                 arr[id] = 1 
-        super().__init__(default=arr, dim=dim)
+        super().__init__(default=arr, dim=dim, _complex=False, **kwargs)
 
 
 class RandomVector(Vector):
@@ -1362,7 +1366,7 @@ class RandomVector(Vector):
             vector with complex entries otherwise real entries.
     """
 
-    def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None, _complex:bool=True):
+    def __init__(self, dim:int = 3, lower=-1, upper=1, desired_norm:float=None, _complex:bool=True, **kwargs):
 
         a = lower
         b = upper
@@ -1377,10 +1381,10 @@ class RandomVector(Vector):
         nr = np.linalg.norm(arr)
 
         if desired_norm == None:
-            super().__init__(default=arr)
+            super().__init__(default=arr, _complex=_complex, **kwargs)
         else:
             arr = (desired_norm * arr) / nr
-            super().__init__(default=arr)
+            super().__init__(default=arr, _complex=_complex, **kwargs)
 
 
 class RandomQuantumState(RandomVector):
