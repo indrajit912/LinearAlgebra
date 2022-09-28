@@ -7,6 +7,7 @@
 #
 
 # TODO: Add `Convex Optimization Solver`: Source: "https://www.cvxpy.org/"
+# TODO: Add  code for `Moore–Penrose inverse` in Matrix
 
 import sympy as sp
 import numpy as np
