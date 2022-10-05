@@ -343,6 +343,12 @@ class Matrix:
     def inverse(self):
         return Matrix(np.linalg.inv(self.matrix))
 
+    def pseudoinverse(self):
+        """
+        Calculates the Moore-Penrose inverse
+        """
+        return Matrix(np.linalg.pinv(self.matrix))
+
     def charpoly(self):
         t = sp.symbols('t')
         return self.prettify().charpoly(t)
