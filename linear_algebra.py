@@ -604,11 +604,14 @@ class Vector(Matrix):
         """
             'default': 1D array
         """
+
         if isinstance(default, (list, np.ndarray)):
             vals = np.array(default).reshape(len(default), 1) 
             super().__init__(default=vals)
         else:
             super().__init__(default, order=(dim, 1), **kwargs)
+
+        self.dim = len(self.matrix)
 
 
     def __repr__(self):
@@ -697,7 +700,7 @@ class Vector(Matrix):
 
     # TODO: Implement Gram-Schmidt Orthogonalizations
     @staticmethod
-    def gram_schmidt_orthogonalize(vectors:list):
+    def gram_schmidt_orthogonalize(ws:list):
         """
         Accepts:
         --------
@@ -707,7 +710,16 @@ class Vector(Matrix):
         --------
             `list`: list of orthogonalized Vector() objects
         """
-        pass
+        n = len(ws)
+        vs = [ws[0]]
+        for k in range(1, n, 1):
+            sk = Vector(np.zeros(ws[0].dim))
+            for j in range(k):
+                sk += ws[k].component_along(vs[j])
+            vk = ws[k] - sk
+            vs.append(vk)
+
+        return vs
     
 
     # TODO: Implement Householder principle
