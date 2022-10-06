@@ -201,6 +201,8 @@ class Matrix:
 
                 else:
                     raise NotImplemented
+            elif isinstance(c, Vector):
+                cols.append(c.matrix)
 
         return Matrix(np.concatenate(cols, axis=1))
 
@@ -850,6 +852,52 @@ class Vector(Matrix):
 ################## Classes based on `Matrix` and `Vector` ######################
 #################################################################################
 #################################################################################
+
+class QRdecomposition:
+    """
+    Class for QR-decomposition of a `Matrix`
+
+    Author: Indrajit Ghosh
+    Date: Oct 06, 2022
+    """
+
+    def __init__(self, mat:Matrix, gram_schmidt=True):
+        self.mat = mat
+
+        if gram_schmidt:
+            self.qr_by_gram_schmidt_orthogonalization()
+        else:
+            pass
+    
+
+    def qr_by_gram_schmidt_orthogonalization(self):
+        """
+        Calculates Q and R using Gram-Schmidt orthogonalization
+        """
+
+        cols_of_mat = [Vector(w) for w in self.mat.get_columns()]
+        vs = Vector.gram_schmidt_orthogonalize(cols_of_mat)
+        us = Vector.normalize(vs)
+
+        self.Q = Matrix.create_matrix_from_columns(us)
+
+        R = Matrix(default=0, order=self.mat.order)
+        for j in range(R.rows):
+            for k in range(R.cols):
+                if j == k:
+                    R.matrix[j][j] = vs[j].norm()
+                elif j < k:
+                    R.matrix[j][k] = cols_of_mat[k].dot(us[j])
+
+        self.R = R
+
+    def qr_by_household_reflection(self):
+        """
+        TODO: Calculates Q and R using household reflection
+        source: "https://en.wikipedia.org/wiki/QR_decomposition#Using_Householder_reflections
+        """
+        pass
+
 
 
 class BlockDiagonalMatrix(Matrix):
