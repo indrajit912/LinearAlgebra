@@ -100,6 +100,25 @@ class Matrix:
         return mat
 
 
+    def get_columns(self, col:int=None):
+        """
+        Returns:
+        --------
+            `[np.ndarray, np.ndarray, ..., np.ndarray]` if col is `None`
+            `np.ndarray` if col is given
+        """
+        return [self.matrix[:, j] for j in range(self.cols)] if col is None else self.matrix[:, col - 1]
+
+
+    def get_rows(self, row:int=None):
+        """
+        Returns:
+        --------
+            `[np.ndarray, np.ndarray, ..., np.ndarray]` if row is `None`
+            `np.ndarray` if row is given
+        """
+        return [self.matrix[j, :] for j in range(self.rows)] if row is None else self.matrix[row - 1, :]
+
     def get_tex(self, **kwargs):
         """
         Converts the ```Matrix``` object into a LaTeX expression
