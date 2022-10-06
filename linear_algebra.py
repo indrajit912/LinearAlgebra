@@ -174,6 +174,38 @@ class Matrix:
         return tex_command
 
 
+    @classmethod
+    def create_matrix_from_columns(cls, columns:list):
+        """
+        Creates a Matrix from the given list of columns
+
+        Accepts:
+        --------
+            `[np.ndarray, ..., np.ndarray]`
+
+        Returns:
+        --------
+            `Matrix`
+        """
+        cols = []
+        for c in columns:
+            if isinstance(c, np.ndarray):
+                sh = np.shape(c)
+                if len(sh) == 2:
+                    if sh[1] == 1:
+                        cols.append(c)
+                    else:
+                        raise NotImplemented
+                elif len(sh) == 1:
+                    cols.append(c.reshape(sh[0], 1))
+
+                else:
+                    raise NotImplemented
+
+        return Matrix(np.concatenate(cols, axis=1))
+
+
+
     @staticmethod
     def add_ampersand_and_linebreak_tex(arr):
         """Accepts a 1D list and add '&' and '\\' chars properly"""
