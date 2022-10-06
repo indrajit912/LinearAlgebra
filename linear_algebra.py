@@ -731,10 +731,7 @@ class Vector(Matrix):
         n = len(ws)
         vs = [ws[0]]
         for k in range(1, n, 1):
-            sk = Vector(np.zeros(ws[0].dim))
-            for j in range(k):
-                sk += ws[k].component_along(vs[j])
-            vk = ws[k] - sk
+            vk = ws[k] - Vector.sum([ws[k].component_along(vs[j]) for j in range(k)])
             vs.append(vk)
 
         return vs
