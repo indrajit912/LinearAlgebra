@@ -224,6 +224,16 @@ class Matrix:
     def __radd__(self, other):
         return self.__add__(other)
 
+    
+    # `sum` function
+    @staticmethod
+    def sum(list_of_matrices:list):
+        M = Matrix(default=0, order=list_of_matrices[0].order)
+        for A in list_of_matrices:
+            M += A
+
+        return M
+
     # Subtraction
     def __sub__(self, other):
 
@@ -637,6 +647,14 @@ class Vector(Matrix):
 
     def __radd__(self, other):
         return self.__add__(other)
+
+    @staticmethod
+    def sum(list_of_vectors:list):
+        v = Vector(default=0, dim=list_of_vectors[0].dim)
+        for w in list_of_vectors:
+            v += w
+
+        return v
     
     def __sub__(self, other):
         if isinstance(other, Vector):
@@ -698,7 +716,7 @@ class Vector(Matrix):
         """Calculates the Hermitian norm of the Vector"""
         return np.sqrt(self.dot(self).real)
 
-    # TODO: Implement Gram-Schmidt Orthogonalizations
+
     @staticmethod
     def gram_schmidt_orthogonalize(ws:list):
         """
