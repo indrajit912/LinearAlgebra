@@ -859,6 +859,41 @@ class QRdecomposition:
 
     Author: Indrajit Ghosh
     Date: Oct 06, 2022
+
+    Parameter(s):
+    -------------
+        `mat`: `Matrix` class object
+        `gram-schmidt`: `Bool` (Optional)
+            if True then uses Gram-Schmidt Orthogonalization to compute the QR-decomposition otherwise
+            uses Household Reflection
+
+    Example:
+    --------
+    >>> from linear_algebra import QRdecomposition
+    >>> A = Matrix([
+            [12, -51, 4],
+            [6, 167, -68],
+            [-4, 24, -41]
+        ])
+    >>> decom = QRdecomposition(A)
+    >>> Q = decom.Q
+    >>> Q
+
+        Matrix(
+        [[ 14.+0.j,  21.+0.j, -14.+0.j],
+         [  0.+0.j, 175.+0.j, -70.+0.j],
+         [  0.+0.j,   0.+0.j,  35.+0.j]]
+        )
+
+    >>> R = decom.R
+    >>> R
+
+        Matrix(
+        [[ 14.+0.j,  21.+0.j, -14.+0.j],
+         [  0.+0.j, 175.+0.j, -70.+0.j],
+         [  0.+0.j,   0.+0.j,  35.+0.j]]
+        )
+
     """
 
     def __init__(self, mat:Matrix, gram_schmidt=True):
@@ -879,7 +914,7 @@ class QRdecomposition:
         vs = Vector.gram_schmidt_orthogonalize(cols_of_mat)
         us = Vector.normalize(vs)
 
-        self.Q = Matrix.create_matrix_from_columns(us)
+        self.Q = Matrix(np.concatenate([u.matrix for u in us], axis=1)) # Matrix.create_matrix_from_columns(us)
 
         R = Matrix(default=0, order=self.mat.order)
         for j in range(R.rows):
