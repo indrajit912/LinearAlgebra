@@ -796,20 +796,20 @@ class Vector(Matrix):
 
 
     @staticmethod
-    def gram_schmidt_orthogonalize(ws:list):
+    def gram_schmidt_orthogonalize(vectors:list):
         """
         Accepts:
         --------
-            `list`: list of Vector() objects
+            `[Vector(), Vector(), ..., Vector()]`
         
         Returns:
         --------
-            `list`: list of orthogonalized Vector() objects
+            `[Vector(), Vecotr(), ..., Vector()]`: list of orthogonalized Vector() objects
         """
-        n = len(ws)
-        vs = [ws[0]]
+        n = len(vectors)
+        vs = [vectors[0]]
         for k in range(1, n, 1):
-            vk = ws[k] - Vector.sum([ws[k].component_along(vs[j]) for j in range(k)])
+            vk = vectors[k] - Vector.sum([vectors[k].component_along(vs[j]) for j in range(k)])
             vs.append(vk)
 
         return vs
