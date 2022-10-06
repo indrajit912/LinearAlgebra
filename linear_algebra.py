@@ -119,6 +119,16 @@ class Matrix:
         """
         return [self.matrix[j, :] for j in range(self.rows)] if row is None else self.matrix[row - 1, :]
 
+    
+    def diagonal(self, offset=0):
+        """
+        If the offset is 0 then returns the main diagonal
+        Returns:
+        --------
+            `np.ndarray`
+        """
+        return np.diagonal(self.matrix, offset=offset)
+
     def get_tex(self, **kwargs):
         """
         Converts the ```Matrix``` object into a LaTeX expression
