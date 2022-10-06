@@ -77,7 +77,7 @@ class Matrix:
 
     def __repr__(self):
 
-        class_name = "Matrix"
+        class_name = self.__class__.__name__
 
         # arr = [[self.matrix[i][j] for j in range(self.cols)] for i in range(self.cols)]
         arr_str = np.array2string(self.matrix, separator=', ')
