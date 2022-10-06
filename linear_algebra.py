@@ -695,6 +695,20 @@ class Vector(Matrix):
         """Calculates the Hermitian norm of the Vector"""
         return np.sqrt(self.dot(self).real)
 
+    # TODO: Implement Gram-Schmidt Orthogonalizations
+    @staticmethod
+    def gram_schmidt_orthogonalization(vectors:list):
+        """
+        Accepts:
+        --------
+            `list`: list of Vector() objects
+        
+        Returns:
+        --------
+            `list`: list of orthogonalized Vector() objects
+        """
+        pass
+
 
     def is_orthogonal(self, other):
         if np.allclose(self.dot(other), 0):
