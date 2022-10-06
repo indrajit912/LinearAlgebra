@@ -697,7 +697,7 @@ class Vector(Matrix):
 
     # TODO: Implement Gram-Schmidt Orthogonalizations
     @staticmethod
-    def gram_schmidt_orthogonalization(vectors:list):
+    def gram_schmidt_orthogonalize(vectors:list):
         """
         Accepts:
         --------
@@ -706,6 +706,15 @@ class Vector(Matrix):
         Returns:
         --------
             `list`: list of orthogonalized Vector() objects
+        """
+        pass
+    
+
+    # TODO: Implement Householder principle
+    @staticmethod
+    def householder():
+        """
+        Source: Friedberg's book page 97, exercises
         """
         pass
 
