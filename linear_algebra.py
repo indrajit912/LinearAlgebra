@@ -847,92 +847,51 @@ class Vector(Matrix):
 
 
 
+
 #################################################################################
 #################################################################################
 ################## Classes based on `Matrix` and `Vector` ######################
 #################################################################################
 #################################################################################
 
-class QRdecomposition:
+class Identity(Matrix):
+    """Identity Matrix of order n"""
+    def __init__(self, size:int=3, **kwargs):
+        super().__init__(default=np.eye(size), _complex=False, **kwargs)
+
+
+class HouseholderReflection(Matrix):
     """
-    Class for QR-decomposition of a `Matrix`
-
-    Author: Indrajit Ghosh
-    Date: Oct 06, 2022
-
-    Parameter(s):
-    -------------
-        `mat`: `Matrix` class object
-        `gram-schmidt`: `Bool` (Optional)
-            if True then uses Gram-Schmidt Orthogonalization to compute the QR-decomposition otherwise
-            uses Household Reflection
-
-    Example:
+    For u unit vector the householder reflection is H_u := I - 2(u.tensor(u))
+    Returns:
     --------
-    >>> from linear_algebra import QRdecomposition
-    >>> A = Matrix([
-            [12, -51, 4],
-            [6, 167, -68],
-            [-4, 24, -41]
-        ])
-    >>> decom = QRdecomposition(A)
-    >>> Q = decom.Q
-    >>> Q
-
-        Matrix(
-        [[ 14.+0.j,  21.+0.j, -14.+0.j],
-         [  0.+0.j, 175.+0.j, -70.+0.j],
-         [  0.+0.j,   0.+0.j,  35.+0.j]]
-        )
-
-    >>> R = decom.R
-    >>> R
-
-        Matrix(
-        [[ 14.+0.j,  21.+0.j, -14.+0.j],
-         [  0.+0.j, 175.+0.j, -70.+0.j],
-         [  0.+0.j,   0.+0.j,  35.+0.j]]
-        )
-
+        `Matrix`: the Householder reflection cor to the unit vector along `self`
     """
 
-    def __init__(self, mat:Matrix, gram_schmidt=True):
-        self.mat = mat
+    def __init__(self, u:Vector, **kwargs):
+        
+        if not isinstance(u, Vector):
+            u = Vector(u)
+        
+        self.u = u.unit()
 
-        if gram_schmidt:
-            self.qr_by_gram_schmidt_orthogonalization()
-        else:
-            pass
-    
+        mat = self.householder_reflection().matrix
 
-    def qr_by_gram_schmidt_orthogonalization(self):
+        super().__init__(default=mat, **kwargs)
+
+
+    def householder_reflection(self):
         """
-        Calculates Q and R using Gram-Schmidt orthogonalization
+        For u unit vector the householder reflection is H_u := I - 2(u.tensor(u))
+        Returns:
+        --------
+            `Matrix`: the Householder reflection cor to the unit vector along `self`
         """
+        I = Identity(size=self.u.dim)
 
-        cols_of_mat = [Vector(w) for w in self.mat.get_columns()]
-        vs = Vector.gram_schmidt_orthogonalize(cols_of_mat)
-        us = Vector.normalize(vs)
+        P = self.u.as_projection_operator()
 
-        self.Q = Matrix(np.concatenate([u.matrix for u in us], axis=1)) # Matrix.create_matrix_from_columns(us)
-
-        R = Matrix(default=0, order=self.mat.order)
-        for j in range(R.rows):
-            for k in range(R.cols):
-                if j == k:
-                    R.matrix[j][j] = vs[j].norm()
-                elif j < k:
-                    R.matrix[j][k] = cols_of_mat[k].dot(us[j])
-
-        self.R = R
-
-    def qr_by_household_reflection(self):
-        """
-        TODO: Calculates Q and R using household reflection
-        source: "https://en.wikipedia.org/wiki/QR_decomposition#Using_Householder_reflections
-        """
-        pass
-
+        return I - 2 * P
 
 
 class BlockDiagonalMatrix(Matrix):
@@ -1027,11 +986,6 @@ class BlockDiagonalMatrix(Matrix):
 
         return BlockDiagonalMatrix(ls)
 
-
-class Identity(Matrix):
-    """Identity Matrix of order n"""
-    def __init__(self, size:int=3, **kwargs):
-        super().__init__(default=np.eye(size), _complex=False, **kwargs)
 
 
 class RandomMatrix(Matrix):
@@ -1553,6 +1507,87 @@ class PauliMatrix(Matrix):
         sigma_j = np.array([[self.kronecker_delta(j, 3), self.kronecker_delta(j, 1) - 1j * self.kronecker_delta(j, 2)],
                        [self.kronecker_delta(j, 1) + 1j * self.kronecker_delta(j, 2), - self.kronecker_delta(j, 3)]])
         return sigma_j
+
+
+class QRdecomposition:
+    """
+    Class for QR-decomposition of a `Matrix`
+
+    Author: Indrajit Ghosh
+    Date: Oct 06, 2022
+
+    Parameter(s):
+    -------------
+        `mat`: `Matrix` class object
+        `gram-schmidt`: `Bool` (Optional)
+            if True then uses Gram-Schmidt Orthogonalization to compute the QR-decomposition otherwise
+            uses Household Reflection
+
+    Example:
+    --------
+    >>> from linear_algebra import QRdecomposition
+    >>> A = Matrix([
+            [12, -51, 4],
+            [6, 167, -68],
+            [-4, 24, -41]
+        ])
+    >>> decom = QRdecomposition(A)
+    >>> Q = decom.Q
+    >>> Q
+
+        Matrix(
+        [[ 14.+0.j,  21.+0.j, -14.+0.j],
+         [  0.+0.j, 175.+0.j, -70.+0.j],
+         [  0.+0.j,   0.+0.j,  35.+0.j]]
+        )
+
+    >>> R = decom.R
+    >>> R
+
+        Matrix(
+        [[ 14.+0.j,  21.+0.j, -14.+0.j],
+         [  0.+0.j, 175.+0.j, -70.+0.j],
+         [  0.+0.j,   0.+0.j,  35.+0.j]]
+        )
+
+    """
+
+    def __init__(self, mat:Matrix, gram_schmidt=True):
+        self.mat = mat
+
+        if gram_schmidt:
+            self.qr_by_gram_schmidt_orthogonalization()
+        else:
+            pass
+    
+
+    def qr_by_gram_schmidt_orthogonalization(self):
+        """
+        Calculates Q and R using Gram-Schmidt orthogonalization
+        """
+
+        cols_of_mat = [Vector(w) for w in self.mat.get_columns()]
+        vs = Vector.gram_schmidt_orthogonalize(cols_of_mat)
+        us = Vector.normalize(vs)
+
+        self.Q = Matrix(np.concatenate([u.matrix for u in us], axis=1)) # Matrix.create_matrix_from_columns(us)
+
+        R = Matrix(default=0, order=self.mat.order)
+        for j in range(R.rows):
+            for k in range(R.cols):
+                if j == k:
+                    R.matrix[j][j] = vs[j].norm()
+                elif j < k:
+                    R.matrix[j][k] = cols_of_mat[k].dot(us[j])
+
+        self.R = R
+
+    def qr_by_household_reflection(self):
+        """
+        TODO: Calculates Q and R using household reflection
+        source: "https://en.wikipedia.org/wiki/QR_decomposition#Using_Householder_reflections
+        """
+        pass
 
 
 class BasisVector(Vector):
