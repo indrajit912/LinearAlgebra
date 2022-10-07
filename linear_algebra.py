@@ -863,8 +863,8 @@ class Identity(Matrix):
 class HouseholderReflection(Matrix):
     """
     For u unit vector the householder reflection is H_u := I - 2(u.tensor(u))
-    H_u is a self-adjoint unitary and reflects the space about u.othrogonal_complement
-    
+    H_u is a self-adjoint unitary and reflects the space about the hyperplane u.othrogonal_complement
+
     Returns:
     --------
         `Matrix`: the Householder reflection cor to the unit vector along `self`
