@@ -37,15 +37,19 @@ class Matrix:
 
     Examples
     -------
-        >>> A = Matrix(
-                        [
-                            [1.2, 0.3],
-                            [0.1, 0]
-                        ]
-                    )
+        >>> A = Matrix([
+                [12, -51, 4],
+                [6, 167, -68],
+                [-4, 24, -41]
+            ])
 
         >>> A
-        >>>
+                Matrix(
+                [[ 12.+0.j, -51.+0.j,   4.+0.j],
+                 [  6.+0.j, 167.+0.j, -68.+0.j],
+                 [ -4.+0.j,  24.+0.j, -41.+0.j]]
+                )
+
         >>> arr = np.arange(0, 9, 1).reshape(3, 3)
         >>> mat = Matrix(default=7, order=(3, 2))
         >>> mat.prettify()
