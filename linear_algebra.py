@@ -1120,7 +1120,7 @@ class RandomBooleanMatrix(Matrix):
         if isinstance(order, int):
             rows = cols = order
 
-        arr = np.random.rand(rows, cols) > p
+        arr = (np.random.rand(rows, cols) > p).astype(int)
         super().__init__(default=arr, _complex=False, **kwargs)
 
 
