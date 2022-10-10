@@ -438,6 +438,21 @@ class Matrix:
 
         return Matrix(Q), Matrix(R)
 
+    def svd(self):
+        """
+        Singular Value decomposition
+        Suppose the matrix is of order `mxn`
+
+        `Returns`:
+        ----------
+            `U`: Matrix(); Unitary of order `mxm`
+            `S`: np.array(); Array of singular values
+            `Vh`: Matrix(); conjugate transpose of Unitary of order `nxn`
+        """
+        U, S, Vh = np.linalg.svd(self.matrix)
+
+        return Matrix(U), S, Matrix(Vh)
+
     
     @staticmethod
     def flatten(lst):
