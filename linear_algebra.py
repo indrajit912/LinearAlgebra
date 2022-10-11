@@ -111,7 +111,9 @@ class Matrix:
             `[np.ndarray, np.ndarray, ..., np.ndarray]` if col is `None`
             `np.ndarray` if col is given
         """
-        return [self.matrix[:, j] for j in range(self.cols)] if col is None else self.matrix[:, col - 1]
+        colmn = [self.matrix[:, j] for j in range(self.cols)] if col is None else self.matrix[:, col - 1]
+
+        return colmn.reshape(self.rows, 1) 
 
 
     def get_rows(self, row:int=None):
