@@ -68,6 +68,9 @@ class Matrix:
         if isinstance(order, int):
             self.rows = self.cols = order
         else:
+            if isinstance(default, np.ndarray) and len(default.shape) == 1:
+                default = default.reshape(1, default.shape[0]) # Row matrix
+                
             self.rows = order[0] if order != None else len(default)
             self.cols = order[1] if order != None else len(default[0])
 
@@ -1659,6 +1662,26 @@ class RandomVector(Vector):
         else:
             arr = (desired_norm * arr) / nr
             super().__init__(default=arr, _complex=_complex, **kwargs)
+
+
+
+class RandomBooleanVector(Vector):
+    """
+    Generates a random `Vector` whose entries are 0 and 1
+
+    Parameters
+    ----------
+        `dim`: int; size of the vector
+        `prob`: float; probability of success i.e. 1
+    """
+
+    def __init__(self, dim:int = 3, prob:float=None):
+
+        prob = 0.5 if prob is None else prob
+
+        arr = np.random.choice(a=[False, True], size=dim, p=[prob, 1-prob]).astype(int)
+
+        super().__init__(default=arr, _complex=False)
 
 
 class RandomQuantumState(RandomVector):
