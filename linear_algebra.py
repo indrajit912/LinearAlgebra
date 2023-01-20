@@ -1471,10 +1471,19 @@ class RandomProjectionMatrix(Matrix):
     >>> E.prettify()
 
     """
-    def __init__(self, size:int=2, prob:float=0.6, diagonal:bool=False, **kwargs):
+    def __init__(self, size:int=2, prob:float=0.6, diagonal:bool=False, rank_:int=None, **kwargs):
 
         # Random diagonal projection matrix
-        diag = np.random.choice(a=[False, True], size=size, p=[1- prob, prob]).astype(int)
+        if rank_ is None:
+            diag = np.random.choice(a=[False, True], size=size, p=[1- prob, prob]).astype(int)
+        else:
+            diag = np.concatenate(
+                [
+                    np.ones(shape=(rank_,)),
+                    np.zeros((size-rank_,))
+                ]
+            )
+            
         D = DiagonalMatrix(diagonal=diag)
 
         if diagonal:
