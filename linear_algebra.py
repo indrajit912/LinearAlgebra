@@ -1679,7 +1679,7 @@ class RandomBooleanVector(Vector):
 
         prob = 0.5 if prob is None else prob
 
-        arr = np.random.choice(a=[False, True], size=dim, p=[prob, 1-prob]).astype(int)
+        arr = np.random.choice(a=[False, True], size=dim, p=[1- prob, prob]).astype(int)
 
         super().__init__(default=arr, _complex=False)
 
