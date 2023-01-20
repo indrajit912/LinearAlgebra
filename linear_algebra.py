@@ -1409,6 +1409,90 @@ class RandomDensityMatrix(Matrix):
         return ran_density_mat
 
 
+class RandomDoublyStochasticMatrix(Matrix):
+    """
+    A class that gives a random DoublyStochasticMatrix, which is a 
+    matrix of nonnegative real numbers, each of whose rows and columns sums to 1
+
+    Parameter
+    ---------
+    `size`: integer
+            dimension of the matrix
+
+    Returns
+    -------
+    An object of the class `Matrix`
+
+
+    Algorithm
+    ---------
+        1. Generate a RandomOrthogonalMatrix, say, O = [O_ij]
+        2. Return the matrix [|O_ij|^2]
+
+    Example
+    -------
+    >>> from linear_algebra import RandomDoublyStochasticMatrix
+    >>> O = RandomDoublyStochasticMatrix(size=3)
+    >>> O
+
+    """
+    def __init__(self, size:int=3, **kwargs):
+
+        ortho_arr = RandomOrthogonalMatrix.orthogonal_group_generator(size)
+        stocha_arr = np.vectorize(lambda z: np.abs(z) ** 2)(ortho_arr)
+
+        super().__init__(default=stocha_arr, _complex=False, **kwargs)
+        
+
+class RandomProjectionMatrix(Matrix):
+    """
+    Class representing a random projection matrix
+
+    Self-adjoint idempotent matrix
+
+    Parameters
+    ----------
+        `size`:int  
+            order of the matrix
+        `prob`:float; The probability of success
+        `diagonal`:bool
+            default ```False```
+            if `diagonal` is `True` then the class will generate a diagonal 
+            matrix with 0s and 1s on principal diagonal.
+
+    Returns
+    -------
+        `Matrix` class object
+
+    Example
+    -------
+    >>> from linear_algebra import RandomProjectionMatrix
+    >>> E = RandomProjectionMatrix(size=3)
+    >>> E.prettify()
+
+    """
+    def __init__(self, size:int=2, prob:float=0.6, diagonal:bool=False, **kwargs):
+
+        # Random diagonal projection matrix
+        diag = np.random.choice(a=[False, True], size=size, p=[1- prob, prob]).astype(int)
+        D = DiagonalMatrix(diagonal=diag)
+
+        if diagonal:
+            proj = D.matrix
+        else:
+            # Random Unitary of order `size`
+            U = HaarDistributedUnitary(size=size)
+
+            # Random Projection
+            E = U.star() * D * U
+            proj = E.matrix
+
+
+        super().__init__(default=proj, _complex=False, **kwargs)
+
+    
+
+
 class BasisMatrix(Matrix):
     """
     Gives the (rectangular) elementary basis matrices ```E_{ij}``` 
